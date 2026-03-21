@@ -5,11 +5,13 @@ const API = axios.create({
   withCredentials: true,
 });
 
-// Auto-redirect on session expiry
+// Auto-redirect on session expiry (only for non-auth-check calls)
 API.interceptors.response.use(
   (res) => res,
   (error) => {
-    if (error.response?.status === 401 && !window.location.pathname.includes('/admin/login')) {
+    const url = error.config?.url || '';
+    const isAuthCheck = url.includes('/auth/me') || url.includes('/auth/login') || url.includes('/auth/register');
+    if (error.response?.status === 401 && !isAuthCheck && !window.location.pathname.includes('/admin/login')) {
       window.location.href = '/admin/login';
     }
     return Promise.reject(error);
