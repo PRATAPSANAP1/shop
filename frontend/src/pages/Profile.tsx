@@ -39,19 +39,6 @@ const Profile = () => {
     }
   };
 
-  const handleSendOtp = async () => {
-    setOtpLoading(true);
-    try {
-      const { data } = await sendOTP();
-      setShowOtp(true);
-      showToast(data.message || 'OTP sent to your registered mobile!', 'success');
-    } catch (error: any) {
-      showToast(error.response?.data?.error || 'Failed to send OTP', 'error');
-    } finally {
-      setOtpLoading(false);
-    }
-  };
-
   if (loading) return <div style={{ padding: '40px', textAlign: 'center' }}>Loading...</div>;
 
   return (
@@ -78,6 +65,7 @@ const Profile = () => {
                     style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
                   />
                 </div>
+              </div>
             </div>
           ))}
 
