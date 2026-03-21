@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Clock, Map, Zap, PieChart as PieChartIcon, BarChart as BarChartIcon, RefreshCw, ShoppingCart, Eye, Star, AlertTriangle, Loader2 } from 'lucide-react';

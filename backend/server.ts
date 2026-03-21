@@ -20,9 +20,10 @@ const app = express();
 
 connectDB();
 
-app.use(cors({ 
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000', 
-  credentials: true 
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',');
+app.use(cors({
+  origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)),
+  credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());

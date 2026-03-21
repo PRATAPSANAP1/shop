@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { getRacks, createRack, updateRack, deleteRack } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';

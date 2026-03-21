@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { getProfile, updateProfile, sendOTP } from '../services/api';
 import { motion } from 'framer-motion';

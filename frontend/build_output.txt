@@ -1,0 +1,17 @@
+
+> shop-frontend@1.0.0 build
+> react-scripts build
+
+Creating an optimized production build...
+Failed to compile.
+
+TS2322: Type '{ hidden: { y: number; opacity: number; }; visible: { y: number; opacity: number; transition: { type: string; stiffness: number; damping: number; }; }; }' is not assignable to type 'Variants'.
+  [0m [90m 129 |[39m           [33m<[39m[33mmotion[39m[33m.[39mdiv
+   [90m 130 |[39m             key[33m=[39m{card[33m.[39mlabel}
+  [31m[1m>[22m[39m[90m 131 |[39m             variants[33m=[39m{itemVariants}
+   [90m     |[39m             [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+   [90m 132 |[39m             onClick[33m=[39m{() [33m=>[39m card[33m.[39mclickable [33m&&[39m handleCardClick(card[33m.[39mtype)}
+   [90m 133 |[39m             className[33m=[39m[32m"glass-panel"[39m
+   [90m 134 |[39m             style[33m=[39m{{ padding[33m:[39m isMobile [33m?[39m [32m'24px 20px'[39m [33m:[39m [32m'24px'[39m[33m,[39m cursor[33m:[39m card[33m.[39mclickable [33m?[39m [32m'pointer'[39m [33m:[39m [32m'default'[39m[33m,[39m display[33m:[39m [32m'flex'[39m[33m,[39m flexDirection[33m:[39m [32m'row'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m gap[33m:[39m isMobile [33m?[39m [32m'20px'[39m [33m:[39m [32m'18px'[39m }}[0m
+
+
