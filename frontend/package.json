@@ -1,0 +1,44 @@
+{
+  "name": "shop-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.0",
+    "axios": "^1.5.0",
+    "framer-motion": "^12.36.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.0",
+    "jsqr": "^1.4.0",
+    "lucide-react": "^0.577.0",
+    "qrcode": "^1.5.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "recharts": "^2.8.0",
+    "three": "^0.168.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.183.1",
+    "react-scripts": "5.0.1",
+    "typescript": "^5.9.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

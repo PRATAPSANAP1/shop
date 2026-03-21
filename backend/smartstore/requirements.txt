@@ -1,0 +1,13 @@
+ultralytics
+opencv-python
+pandas
+numpy
+streamlit
+scikit-learn
+plotly
+matplotlib
+seaborn
+filterpy
+lapx
+scipy
+xgboost

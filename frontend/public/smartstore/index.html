@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStore AI | Intelligent Retail Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background Effects -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="grid-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-store"></i>
+            <span>SmartStore<span class="highlight">AI</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="features.html">Features</a>
+            <a href="about.html">About</a>
+            <a href="index.html#dashboards" class="btn-primary">View Dashboards</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero">
+        <div class="hero-content">
+            <div class="badge pulse-animation" style="margin-bottom: 24px;">
+                <span class="pulse-dot"></span>
+                Built for the Hackathon
+            </div>
+            <h1 class="hero-title">
+                Computer Vision <br>
+                <span class="text-gradient">For Retail Stores</span>
+            </h1>
+            <p class="hero-subtitle">Track customer movement and improve your store layout using standard CCTV cameras and some Python magic.</p>
+            <div class="hero-cta">
+                <button onclick="document.getElementById('dashboards').scrollIntoView(); document.querySelector('[data-target=\'analytics-frame\']').click();" class="btn-primary btn-large glow-effect">
+                    <i class="fa-solid fa-chart-pie"></i> Data Analyst View
+                </button>
+                <button onclick="document.getElementById('dashboards').scrollIntoView(); document.querySelector('[data-target=\'shopkeeper-frame\']').click();" class="btn-primary btn-large glow-effect">
+                    <i class="fa-solid fa-store"></i> Shopkeeper View
+                </button>
+            </div>
+            
+            <!-- Floating Decorative Elements -->
+            <div class="floating-shapes">
+                <div class="shape shape-1"><i class="fa-solid fa-video"></i></div>
+                <div class="shape shape-2"><i class="fa-solid fa-brain"></i></div>
+                <div class="shape shape-3"><i class="fa-solid fa-chart-line"></i></div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon pulse-soft"><i class="fa-solid fa-users-viewfinder"></i></div>
+                    <div class="stat-info">
+                        <h3>99%</h3>
+                        <p>Detection Accuracy</p>
+                    </div>
+                </div>
+                <div class="stat-card line-right"></div>
+                <div class="stat-card">
+                    <div class="stat-icon pulse-soft"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div class="stat-info">
+                        <h3>Real-time</h3>
+                        <p>Zone Tracking</p>
+                    </div>
+                </div>
+                <div class="stat-card line-right"></div>
+                <div class="stat-card">
+                    <div class="stat-icon pulse-soft"><i class="fa-solid fa-robot"></i></div>
+                    <div class="stat-info">
+                        <h3>Automated</h3>
+                        <p>Store Suggestions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Assistant Visualization Section -->
+    <section class="agentic-section">
+        <div class="section-header">
+            <div class="badge pulse-animation" style="margin-bottom: 15px;">
+                <span class="pulse-dot"></span> Running Live
+            </div>
+            <h2>Smart <span class="text-gradient">Store Assistant</span></h2>
+            <p>Instead of just showing graphs, our script gives you actual suggestions on what to do based on the data.</p>
+        </div>
+
+        <div class="agent-workflow">
+            <!-- Step 1 -->
+            <div class="workflow-step">
+                <div class="step-icon glass-icon"><i class="fa-solid fa-eye"></i></div>
+                <div class="step-content">
+                    <h4>1. Observe</h4>
+                    <p>Monitors CCTV feeds for congestion and dwell times.</p>
+                </div>
+                <div class="processing-line">
+                    <div class="data-packet"></div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="workflow-step">
+                <div class="step-icon glass-icon glow-blue"><i class="fa-solid fa-brain"></i></div>
+                <div class="step-content">
+                    <h4>2. Analyze</h4>
+                    <p>Correlates traffic patterns with sales data continuously.</p>
+                </div>
+                <div class="processing-line">
+                    <div class="data-packet" style="animation-delay: 1.5s;"></div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="workflow-step">
+                <div class="step-icon glass-icon glow-pink"><i class="fa-solid fa-robot"></i></div>
+                <div class="step-content">
+                    <h4>3. Act</h4>
+                    <p>Alerts staff to open new registers or move displays.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulated Agent Console -->
+        <div class="agent-console">
+            <div class="console-header">
+                <i class="fa-solid fa-terminal"></i> Assistant Log
+            </div>
+            <div class="console-body">
+                <div class="log-line"><span class="time">[10:42:01]</span> <span class="info">CHECK:</span> Lots of people in Aisle 4 (Electronics).</div>
+                <div class="log-line"><span class="time">[10:42:05]</span> <span class="warning">NOTE:</span> People are staying there for over 5 mins.</div>
+                <div class="log-line type-animation"><span class="time">[10:42:08]</span> <span class="action">IDEA:</span> Maybe move some snacks nearby to increase sales?</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Integration Section -->
+    <section id="dashboards" class="dashboard-section">
+        <div class="section-header">
+            <h2>Dashboards</h2>
+            <p>Check out the stats or get simple suggestions for the shopkeeper.</p>
+        </div>
+
+        <div class="dashboard-container">
+            <!-- Tabs -->
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" data-target="analytics-frame">
+                    <i class="fa-solid fa-chart-pie"></i> Data Analyst View
+                </button>
+                <button class="tab-btn" data-target="shopkeeper-frame">
+                    <i class="fa-solid fa-store"></i> Shopkeeper View
+                </button>
+                <a href="http://localhost:8501" target="_blank" class="tab-external" title="Open Analyst in new tab">
+                    <i class="fa-solid fa-external-link-alt"></i>
+                </a>
+                <a href="http://localhost:8502" target="_blank" class="tab-external" title="Open Shopkeeper in new tab" style="margin-left: 5px;">
+                    <i class="fa-solid fa-external-link-alt"></i>
+                </a>
+            </div>
+
+            <!-- Iframe Containers -->
+            <div class="iframe-wrapper">
+                <iframe id="analytics-frame" src="http://localhost:8501" class="dashboard-iframe active" title="Analytics Dashboard"></iframe>
+                <iframe id="shopkeeper-frame" src="http://localhost:8502" class="dashboard-iframe" title="Shopkeeper Dashboard"></iframe>
+                
+                <!-- Loading Overlay (shows while switching) -->
+                <div class="loading-overlay" id="dashboard-loader" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading view...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 SmartStore AI. Built for the Hackathon.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

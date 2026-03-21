@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.env
+*.log
+.DS_Store
+backend/smartstore/data/videos/
+backend/smartstore/data/store_data.db
+__pycache__/
+*.pyc
+*.pyo
