@@ -11,6 +11,10 @@ interface ToastContextType { showToast: (message: string, type?: ToastType) => v
 export const ToastContext = createContext<ToastContextType>({ showToast: () => {} });
 export const useToast = () => useContext(ToastContext);
 
+interface AuthContextType { isAuth: boolean; setIsAuth: (v: boolean) => void; authChecked: boolean; }
+export const AuthContext = createContext<AuthContextType>({ isAuth: false, setIsAuth: () => {}, authChecked: false });
+export const useAuth = () => useContext(AuthContext);
+
 const ToastContainer = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -97,26 +101,17 @@ const SidebarLink = ({ to, icon: Icon, children, onClick }: { to: string, icon: 
 };
 
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
-  const [checked, setChecked] = useState(false);
-  const [authed, setAuthed] = useState(false);
-  useEffect(() => {
-    getMe().then(() => setAuthed(true)).catch(() => setAuthed(false)).finally(() => setChecked(true));
-  }, []);
-  if (!checked) return <div style={{ minHeight: '100vh', background: '#0f172a' }} />;
-  if (authed) return <Navigate to="/admin/home" replace />;
+  const { isAuth, authChecked } = useAuth();
+  if (!authChecked) return <div style={{ minHeight: '100vh', background: '#0f172a' }} />;
+  if (isAuth) return <Navigate to="/admin/home" replace />;
   return <>{children}</>;
 };
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const { isAuth, authChecked } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
-  const [authChecked, setAuthChecked] = useState(false);
-  const [isAuth, setIsAuth] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    getMe().then(() => setIsAuth(true)).catch(() => setIsAuth(false)).finally(() => setAuthChecked(true));
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -274,9 +269,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  useEffect(() => {
+    getMe().then(() => setIsAuth(true)).catch(() => setIsAuth(false)).finally(() => setAuthChecked(true));
+  }, []);
+  return <AuthContext.Provider value={{ isAuth, setIsAuth, authChecked }}>{children}</AuthContext.Provider>;
+};
+
 function App() {
   return (
     <BrowserRouter>
+      <AuthProvider>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<CustomerSearch />} />
@@ -293,6 +298,7 @@ function App() {
         <Route path="/admin/smartstore" element={<Layout><SmartStore /></Layout>} />
         <Route path="/admin/profile" element={<Layout><Profile /></Layout>} />
       </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

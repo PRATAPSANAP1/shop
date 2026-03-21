@@ -1,9 +1,10 @@
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api';
 import { motion } from 'framer-motion';
 import { Store, Mail, Lock, User, ShoppingBag, Phone } from 'lucide-react';
+import { AuthContext } from '../App';
 
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
   (window as any).__showToast?.(msg, type);
@@ -15,6 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const navigate = useNavigate();
+  const { setIsAuth } = React.useContext(AuthContext);
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 480);
@@ -26,8 +28,9 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data } = isRegister ? await register(formData) : await login(formData);
-      showToast(isRegister ? 'Account created! Welcome ' : 'Welcome back! ', 'success');
+      await (isRegister ? register(formData) : login(formData));
+      setIsAuth(true);
+      showToast(isRegister ? 'Account created! Welcome' : 'Welcome back!', 'success');
       navigate('/admin/home');
     } catch (error: any) {
       showToast(error.response?.data?.error || 'Something went wrong', 'error');
