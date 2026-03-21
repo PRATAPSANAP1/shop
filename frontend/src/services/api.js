@@ -44,7 +44,6 @@ export const updateShop = (data) => API.put('/shop', data);
 export const getShop = () => API.get('/shop');
 export const getProfile = () => API.get('/auth/profile');
 export const updateProfile = (data) => API.put('/auth/profile', data);
-export const sendOTP = () => API.post('/auth/send-otp');
 
 // SmartStore
 export const getSmartStoreDashboardData = () => API.get('/smartstore/dashboard-data');

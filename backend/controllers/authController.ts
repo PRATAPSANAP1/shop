@@ -13,26 +13,6 @@ const COOKIE_OPTS = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
-export const sendOTP = async (req: AuthRequest, res: Response) => {
-  try {
-    const user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    if (!user.mobile) return res.status(400).json({ error: 'Please set your mobile number in your Profile first before changing your password.' });
-    
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-
-    user.otp = otp;
-    user.otpExpires = otpExpires;
-    await user.save();
-
-    console.log(`[OTP SIMULATION] Sent OTP ${otp} to ${user.mobile}`);
-    res.json({ message: `OTP sent successfully to your mobile number ${user.mobile} (Simulated OTP: ${otp})` });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, shopName, mobile } = req.body;
@@ -108,7 +88,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 
 export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
-    const { shopName, email, password, otp, mobile } = req.body;
+    const { shopName, email, password, mobile } = req.body;
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -117,19 +97,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
     if (mobile) user.mobile = mobile;
 
     if (password) {
-      if (!otp) return res.status(400).json({ error: 'OTP is required to change password' });
-      
-      if (!user.otp || !user.otpExpires || user.otpExpires < new Date()) {
-        return res.status(400).json({ error: 'OTP expired. Please request a new one.' });
-      }
-
-      if (user.otp !== otp) {
-        return res.status(400).json({ error: 'Invalid OTP' });
-      }
-
       user.password = await bcrypt.hash(password, 10);
-      user.otp = undefined;
-      user.otpExpires = undefined;
     }
 
     await user.save();

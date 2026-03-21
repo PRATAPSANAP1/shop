@@ -6,8 +6,6 @@ export interface IUser extends Document {
   password: string;
   shopName: string;
   mobile: string;
-  otp?: string;
-  otpExpires?: Date;
   token?: string;
   createdAt: Date;
 }
@@ -18,8 +16,6 @@ const userSchema: Schema = new Schema({
   password: { type: String, required: true },
   shopName: { type: String, required: true },
   mobile: { type: String, default: '' },
-  otp: { type: String, default: null },
-  otpExpires: { type: Date, default: null },
   token: { type: String, default: null },
   createdAt: { type: Date, default: Date.now }
 });

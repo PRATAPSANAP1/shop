@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import { getProfile, updateProfile, sendOTP } from '../services/api';
+import { getProfile, updateProfile } from '../services/api';
 import { motion } from 'framer-motion';
-import { Store, Mail, Lock, Phone, ShieldCheck } from 'lucide-react';
+import { Store, Mail, Lock, Phone } from 'lucide-react';
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => (window as any).__showToast?.(msg, type);
 
 const fields = [
@@ -13,9 +13,7 @@ const fields = [
 ];
 
 const Profile = () => {
-  const [formData, setFormData] = useState({ shopName: '', email: '', mobile: '', password: '', otp: '' });
-  const [showOtp, setShowOtp] = useState(false);
-  const [otpLoading, setOtpLoading] = useState(false);
+  const [formData, setFormData] = useState({ shopName: '', email: '', mobile: '', password: '' });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => { loadProfile(); }, []);
@@ -23,7 +21,7 @@ const Profile = () => {
   const loadProfile = async () => {
     try {
       const { data } = await getProfile();
-      setFormData({ shopName: data.shopName, email: data.email, mobile: data.mobile || '', password: '', otp: '' });
+      setFormData({ shopName: data.shopName, email: data.email, mobile: data.mobile || '', password: '' });
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -35,8 +33,7 @@ const Profile = () => {
     try {
       await updateProfile(formData);
       showToast('Profile updated successfully!', 'success');
-      setFormData({ ...formData, password: '', otp: '' });
-      setShowOtp(false);
+      setFormData({ ...formData, password: '' });
     } catch (error: any) {
       showToast(error.response?.data?.error || 'Error updating profile', 'error');
     }
@@ -75,38 +72,12 @@ const Profile = () => {
                     type={type}
                     placeholder={placeholder}
                     value={(formData as any)[key]}
-                    onChange={(e) => {
-                      setFormData({ ...formData, [key]: e.target.value });
-                      if (key === 'password' && e.target.value.length === 0) setShowOtp(false);
-                    }}
+                    onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                     required={required}
                     className="profile-input"
                     style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
                   />
                 </div>
-                {key === 'password' && formData.password && !showOtp && (
-                  <button type="button" onClick={handleSendOtp} disabled={otpLoading} className="btn" style={{ background: 'var(--primary)', color: 'white', padding: '0 15px', borderRadius: '12px', fontSize: '13px', fontWeight: 'bold' }}>
-                    {otpLoading ? '...' : 'Send OTP'}
-                  </button>
-                )}
-              </div>
-              {key === 'password' && showOtp && (
-                <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} style={{ marginTop: '15px' }}>
-                  <div style={{ position: 'relative' }}>
-                    <ShieldCheck size={17} color="#38ef7d" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', zIndex: 1 }} />
-                    <input
-                      type="text"
-                      placeholder="Enter 6-digit OTP"
-                      value={formData.otp}
-                      onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
-                      className="profile-input"
-                      maxLength={6}
-                      style={{ width: '100%', border: '1px solid rgba(56,239,125,0.3)', background: 'rgba(56,239,125,0.05)', paddingLeft: '44px' }}
-                    />
-                  </div>
-                  <p style={{ fontSize: '11px', color: '#38ef7d', marginTop: '5px', marginLeft: '5px' }}>OTP verification required to update password</p>
-                </motion.div>
-              )}
             </div>
           ))}
 

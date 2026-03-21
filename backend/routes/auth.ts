@@ -9,6 +9,5 @@ router.post('/logout', auth, authController.logout);
 router.get('/me', auth, authController.getMe);
 router.get('/profile', auth, authController.getProfile);
 router.put('/profile', auth, authController.updateProfile);
-router.post('/send-otp', auth, authController.sendOTP);
 
 export default router;
