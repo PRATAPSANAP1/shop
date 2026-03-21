@@ -96,6 +96,17 @@ const SidebarLink = ({ to, icon: Icon, children, onClick }: { to: string, icon: 
   );
 };
 
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const [checked, setChecked] = useState(false);
+  const [authed, setAuthed] = useState(false);
+  useEffect(() => {
+    getMe().then(() => setAuthed(true)).catch(() => setAuthed(false)).finally(() => setChecked(true));
+  }, []);
+  if (!checked) return <div style={{ minHeight: '100vh', background: '#0f172a' }} />;
+  if (authed) return <Navigate to="/admin/home" replace />;
+  return <>{children}</>;
+};
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
@@ -118,7 +129,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => { setIsMobileMenuOpen(false); }, [location]);
 
-  if (!authChecked) return null;
+  if (!authChecked) return <div style={{ minHeight: '100vh', background: '#0f172a' }} />;
   if (!isAuth) return <Navigate to="/admin/login" replace />;
 
   const sidebarContent = (
@@ -271,7 +282,7 @@ function App() {
         <Route path="/" element={<CustomerSearch />} />
         <Route path="/search" element={<CustomerSearch />} />
         <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
-        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/admin/home" element={<Layout><ShopView3D /></Layout>} />
         <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
         <Route path="/admin/notifications" element={<Layout><Notifications /></Layout>} />
