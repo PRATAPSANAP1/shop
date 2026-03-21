@@ -22,7 +22,11 @@ connectDB();
 
 const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map(o => o.trim());
 app.use(cors({
-  origin: (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin)),
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    const allowed = allowedOrigins.some(o => origin === o || origin.endsWith('.vercel.app'));
+    cb(null, allowed);
+  },
   credentials: true,
 }));
 app.use(express.json());
