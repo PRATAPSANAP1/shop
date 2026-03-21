@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login, register, logout } from '../services/api';
+import { login, register } from '../services/api';
 import { motion } from 'framer-motion';
 import { Store, Mail, Lock, User, ShoppingBag, Phone } from 'lucide-react';
 
@@ -19,9 +19,6 @@ const Login = () => {
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 480);
     window.addEventListener('resize', handleResize);
-    
-    logout().catch(() => {});
-    
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -31,7 +28,7 @@ const Login = () => {
     try {
       const { data } = isRegister ? await register(formData) : await login(formData);
       showToast(isRegister ? 'Account created! Welcome ' : 'Welcome back! ', 'success');
-      setTimeout(() => navigate('/admin/home'), 500);
+      navigate('/admin/home');
     } catch (error: any) {
       showToast(error.response?.data?.error || 'Something went wrong', 'error');
     } finally {
