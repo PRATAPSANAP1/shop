@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
-  withCredentials: true, // send/receive httpOnly cookies automatically
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  withCredentials: true,
 });
 
 // Auto-redirect on session expiry
@@ -56,3 +56,4 @@ export const getSmartStoreInsights = () => API.get('/smartstore/insights');
 export const getSmartStoreHeatmap = () => API.get('/smartstore/heatmap');
 export const getSmartStoreZones = () => API.get('/smartstore/zones');
 export const getSmartStorePredict = (zone) => API.get(`/smartstore/predict?zone=${encodeURIComponent(zone)}`);
+export default API;

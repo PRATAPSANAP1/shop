@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Box, Text, Plane } from '@react-three/drei';
-import axios from 'axios';
+import API from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Store, MapPin, Package, AlertCircle, X, ChevronRight } from 'lucide-react';
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => (window as any).__showToast?.(msg, type);
@@ -181,7 +181,7 @@ const CustomerSearch: React.FC = () => {
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
-    axios.get('http://localhost:5000/api/shop-config/public/shops/list')
+    API.get('/shop-config/public/shops/list')
       .then(({ data }) => setAllShopNames(data))
       .catch(() => {});
     return () => window.removeEventListener('resize', handleResize);
@@ -204,9 +204,9 @@ const CustomerSearch: React.FC = () => {
     setIsLoading(true);
     try {
       const [configRes, doorsRes, racksRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/shop-config/public/${shopName}`),
-        axios.get(`http://localhost:5000/api/doors/public/${shopName}`),
-        axios.get(`http://localhost:5000/api/public/racks/${shopName}`)
+        API.get(`/shop-config/public/${shopName}`),
+        API.get(`/doors/public/${shopName}`),
+        API.get(`/public/racks/${shopName}`)
       ]);
       setShopConfig(configRes.data.config);
       setDoors(doorsRes.data);
@@ -216,7 +216,7 @@ const CustomerSearch: React.FC = () => {
       const allProductsList: Product[] = [];
       for (const rack of racksRes.data) {
         try {
-          const { data } = await axios.get(`http://localhost:5000/api/public/products/rack/${rack._id}`);
+          const { data } = await API.get(`/public/products/rack/${rack._id}`);
           productsMap[rack._id] = data;
           allProductsList.push(...data);
         } catch (error) {
@@ -242,7 +242,7 @@ const CustomerSearch: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/public/search?query=${searchQuery}&shopName=${shopName}`);
+      const { data } = await API.get(`/public/search?query=${searchQuery}&shopName=${shopName}`);
       if (data.length > 0) {
         setFoundProduct(data[0]);
         setNotFound(false);
