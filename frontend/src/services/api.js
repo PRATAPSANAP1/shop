@@ -6,7 +6,7 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('shop_token');
+  const token = sessionStorage.getItem('shop_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -19,7 +19,7 @@ API.interceptors.response.use(
     const url = error.config?.url || '';
     const isAuthCheck = url.includes('/auth/me') || url.includes('/auth/login') || url.includes('/auth/register');
     if (error.response?.status === 401 && !isAuthCheck && !window.location.pathname.includes('/admin/login')) {
-      localStorage.removeItem('shop_token');
+      sessionStorage.removeItem('shop_token');
       window.location.href = '/admin/login';
     }
     return Promise.reject(error);
@@ -29,7 +29,7 @@ API.interceptors.response.use(
 export const login = async (data) => {
   const res = await API.post('/auth/login', data);
   if (res.data.token) {
-    localStorage.setItem('shop_token', res.data.token);
+    sessionStorage.setItem('shop_token', res.data.token);
   }
   return res;
 };
@@ -37,7 +37,7 @@ export const login = async (data) => {
 export const register = async (data) => {
   const res = await API.post('/auth/register', data);
   if (res.data.token) {
-    localStorage.setItem('shop_token', res.data.token);
+    sessionStorage.setItem('shop_token', res.data.token);
   }
   return res;
 };
@@ -46,7 +46,7 @@ export const logout = async () => {
   try {
     await API.post('/auth/logout');
   } finally {
-    localStorage.removeItem('shop_token');
+    sessionStorage.removeItem('shop_token');
   }
 };
 export const getMe = () => API.get('/auth/me');
