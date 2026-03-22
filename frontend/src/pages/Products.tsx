@@ -5,7 +5,7 @@ const showToast = (msg: string, type: 'success' | 'error' = 'success') => (windo
 import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Filter, Edit, Trash2, QrCode, Package, Boxes, AlertCircle, X, DollarSign, Calendar, Layers, ShoppingBag, Award } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, QrCode, Package, Boxes, AlertCircle, X, DollarSign, Calendar, Layers, ShoppingBag, Award, Tag } from 'lucide-react';
 
 const Products = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -152,15 +152,21 @@ const Products = () => {
 
       <div className="glass-panel" style={{ padding: isMobile ? '12px' : '20px', marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <div style={{ position: 'relative' }}>
+          {!isMobile && <Search size={20} color="#94a3b8" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />}
           <input 
             type="text" 
-            placeholder="Search products..." 
+            placeholder={isMobile ? "Search products..." : "      Search name or category"} 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{ 
-              width: '100%', padding: '12px 18px', background: 'rgba(255,255,255,0.05)', 
-              border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white', outline: 'none'
-            }}
+              width: '100%', 
+              padding: isMobile ? '14px 18px' : '14px 14px 14px 50px', 
+              background: 'rgba(255,255,255,0.04)', 
+              border: '1px solid rgba(255,255,255,0.08)', 
+              borderRadius: '14px', 
+              color: 'white',
+              fontSize: '15px'
+            }} 
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
@@ -291,19 +297,22 @@ const Products = () => {
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
               {(() => {
-                const F = ({ label, children }: any) => (
-                  <div>
-                    <label style={{ display: 'block', color: '#94a3b8', marginBottom: '6px', fontSize: '13px' }}>{label}</label>
-                    <div style={{ position: 'relative' }}>
-                      {React.cloneElement(children, { style: { ...children.props.style, paddingLeft: '14px' }, className: 'profile-input' })}
-                    </div>
-                  </div>
-                );
+                const F = ({ label, children, icon: Icon }: any) => {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <label style={{ color: '#94a3b8', fontSize: '13px', fontWeight: '500' }}>{label}</label>
+      <div style={{ position: 'relative' }}>
+        {!isMobile && Icon && <Icon size={18} color="#4f46e5" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.8 }} />}
+        {React.cloneElement(children, { style: { ...children.props.style, paddingLeft: !isMobile && Icon ? '44px' : '14px' }, className: 'profile-input' })}
+      </div>
+    </div>
+  );
+};
                 return (
                   <>
                     <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
-                      <F label="Product Name">
-                        <input type="text" required placeholder="e.g. Whole Milk" value={formData.productName} onChange={(e) => setFormData({ ...formData, productName: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
+                      <F label="Product Name" icon={Package}>
+                        <input type="text" required placeholder={isMobile ? "e.g. Whole Milk" : "      e.g. Whole Milk"} value={formData.productName} onChange={(e) => setFormData({ ...formData, productName: e.target.value })} style={{ width: '100%', padding: isMobile ? '12px' : '14px 14px 14px 44px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                       </F>
                     </div>
                     <F label="Category">

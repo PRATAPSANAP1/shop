@@ -2,21 +2,27 @@
 import React, { useState, useEffect } from 'react';
 import { getProfile, updateProfile } from '../services/api';
 import { motion } from 'framer-motion';
-import { Store } from 'lucide-react';
+import { Store, Mail, Phone, Lock, User } from 'lucide-react';
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => (window as any).__showToast?.(msg, type);
 
 const fields = [
-  { key: 'shopName', label: 'Shop Name',     type: 'text',     placeholder: 'Your shop name',      required: true },
-  { key: 'email',    label: 'Email',          type: 'email',    placeholder: 'Your email address',   required: true },
-  { key: 'mobile',   label: 'Mobile Number',  type: 'tel',      placeholder: 'Your mobile number',  required: true },
-  { key: 'password', label: 'New Password',  type: 'password', placeholder: 'Leave blank to keep current', required: false },
+  { key: 'shopName', label: 'Shop Name',     type: 'text',     icon: Store,  placeholder: 'Your shop name',      required: true },
+  { key: 'email',    label: 'Email',          type: 'email',    icon: Mail,   placeholder: 'Your email address',   required: true },
+  { key: 'mobile',   label: 'Mobile Number',  type: 'tel',      icon: Phone,  placeholder: 'Your mobile number',  required: true },
+  { key: 'password', label: 'New Password',  type: 'password', icon: Lock,   placeholder: 'Leave blank to keep current', required: false },
 ];
 
 const Profile = () => {
   const [formData, setFormData] = useState({ shopName: '', email: '', mobile: '', password: '' });
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
 
-  useEffect(() => { loadProfile(); }, []);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 480);
+    window.addEventListener('resize', handleResize);
+    loadProfile();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const loadProfile = async () => {
     try {
@@ -47,23 +53,20 @@ const Profile = () => {
 
       <div className="card" style={{ maxWidth: '600px', padding: '30px' }}>
         <form onSubmit={handleSubmit}>
-          {fields.map(({ key, label, type, icon: Icon, placeholder, required }) => (
-            <div key={key} style={{ marginBottom: '20px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: '500', color: 'var(--text-secondary)' }}>
-                {label}
-              </label>
-              <div style={{ position: 'relative', display: 'flex', gap: '10px' }}>
-                <div style={{ position: 'relative', flex: 1 }}>
-                  <input
-                    type={type}
-                    placeholder={placeholder}
-                    value={(formData as any)[key]}
-                    onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                    required={required}
-                    className="profile-input"
-                    style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
-                  />
-                </div>
+          {fields.map(f => (
+            <div key={f.key} style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#94a3b8', marginBottom: '8px', fontSize: '13px', fontWeight: '500' }}>{f.label}</label>
+              <div style={{ position: 'relative' }}>
+                {!isMobile && f.icon && <f.icon size={18} color="#6366f1" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', opacity: 0.7 }} />}
+                <input
+                  type={f.type}
+                  placeholder={f.placeholder}
+                  value={formData[f.key as keyof typeof formData]}
+                  onChange={(e) => setFormData({ ...formData, [f.key]: e.target.value })}
+                  className="profile-input"
+                  style={{ width: '100%', padding: isMobile ? '12px 16px' : '14px 14px 14px 44px', background: 'rgba(30,41,59,0.5)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'white', fontSize: '15px', transition: 'all 0.3s' }}
+                  required={f.required}
+                />
               </div>
             </div>
           ))}

@@ -124,18 +124,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => { setIsMobileMenuOpen(false); }, [location]);
 
-  useEffect(() => {
-    if (authChecked && isAuth) {
-      getMe()
-        .then(({ data }) => {
-          if (!data) setIsAuth(false);
-        })
-        .catch(() => {
-          setIsAuth(false);
-        });
-    }
-  }, [location.pathname, authChecked, isAuth, setIsAuth]);
-
   if (!authChecked) return <div style={{ minHeight: '100vh', background: '#0f172a' }} />;
   if (!isAuth) return <Navigate to="/admin/login" replace />;
 
