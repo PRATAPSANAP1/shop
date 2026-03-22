@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api';
 import { motion } from 'framer-motion';
 import { Store, ArrowRight, CheckCircle2, User, ShoppingBag, Phone, Mail, Lock } from 'lucide-react';
-import { AuthContext } from '../App';
+import { useAuth } from '../App';
 
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
   (window as any).__showToast?.(msg, type);
@@ -16,7 +16,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const navigate = useNavigate();
-  const { isAuth, setIsAuth } = React.useContext(AuthContext);
+  const { isAuth, setIsAuth } = useAuth();
 
   React.useEffect(() => {
     if (isAuth) {
