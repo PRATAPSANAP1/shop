@@ -140,10 +140,10 @@ const ShopBuilder = () => {
   const sectionStyle = { background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(255,255,255,0.08)', padding: '12px', borderRadius: '12px', marginBottom: '12px' };
 
   return (
-    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100%', height: '100%', background: '#0f172a', overflow: isMobile ? 'auto' : 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', width: '100%', height: '100%', minHeight: 0, background: '#0f172a', overflow: 'hidden' }}>
 
       {/* 3D Canvas */}
-      <div style={{ position: 'relative', width: isMobile ? '100%' : '55%', height: isMobile ? '45vw' : '100%', minHeight: isMobile ? '240px' : 'unset', flexShrink: 0 }}>
+      <div style={{ position: 'relative', flex: isMobile ? 'none' : '1 1 0', width: isMobile ? '100%' : 'auto', height: isMobile ? '260px' : '100%', minHeight: isMobile ? '260px' : 0 }}>
         <Canvas shadows camera={{ position: [15, 15, 15], fov: 50 }} style={{ width: '100%', height: '100%' }}>
           <ambientLight intensity={0.6} />
           <directionalLight position={[10, 15, 5]} castShadow intensity={0.8} />
@@ -182,7 +182,7 @@ const ShopBuilder = () => {
       </div>
 
       {/* Controls Panel */}
-      <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', overflowX: 'hidden', padding: '12px', background: 'rgba(15,23,42,0.97)', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
+      <div style={{ width: isMobile ? '100%' : '320px', flexShrink: 0, height: isMobile ? 'auto' : '100%', overflowY: 'auto', overflowX: 'hidden', padding: '12px', background: 'rgba(15,23,42,0.97)', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none', boxSizing: 'border-box' as const }}>
 
         <div style={sectionStyle}>
           <h3 style={{ color: 'white', fontSize: '13px', marginBottom: '10px' }}>Shop Dimensions</h3>
