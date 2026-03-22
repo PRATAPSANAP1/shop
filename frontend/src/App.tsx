@@ -195,7 +195,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}
+              style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}
             >
               {children}
             </motion.div>
