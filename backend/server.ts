@@ -1,5 +1,13 @@
 import dotenv from 'dotenv';
-dotenv.config();
+const result = dotenv.config();
+if (result.error) {
+  console.warn('Warning: .env file not found or could not be loaded');
+}
+
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
+}
+
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -20,15 +28,30 @@ const app = express();
 
 connectDB();
 
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:3000').split(',').map(o => o.trim());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  process.env.FRONTEND_URL
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin) return cb(null, true);
-    const allowed = allowedOrigins.some(o => origin === o || origin.endsWith('.vercel.app'));
-    cb(null, allowed);
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.some(o => origin.startsWith(o)) || 
+                     origin.endsWith('.vercel.app') ||
+                     origin.includes('pratap-sanaps-projects.vercel.app');
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked for origin: ${origin}`);
+      callback(null, false);
+    }
   },
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
