@@ -6,13 +6,15 @@ export interface AuthRequest extends Request {
   userId?: string;
 }
 
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'none' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 const authFactory = (optional = false) => async (req: AuthRequest, res: Response, next: NextFunction) => {
-  console.log("Cookies:", req.cookies);
-  let token = req.cookies?.shop_token;
-  
-  if (!token && req.headers.authorization?.startsWith('Bearer ')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
+  const token = req.cookies?.shop_token;
 
   if (!token) {
     if (optional) return next();
@@ -26,7 +28,11 @@ const authFactory = (optional = false) => async (req: AuthRequest, res: Response
       if (optional) return next();
       return res.status(401).json({ error: 'User not found' });
     }
-    req.userId = decoded.userId;
+    const newToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
+    user.token = newToken;
+    await user.save();
+    res.cookie('shop_token', newToken, COOKIE_OPTS);
+    req.userId = String(user._id);
     next();
   } catch (error) {
     if (optional) return next();
