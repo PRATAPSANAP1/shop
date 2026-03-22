@@ -363,7 +363,7 @@ const ShopBuilder = () => {
   }, []);
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', background: '#0f172a' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: isMobile ? 'column' : 'row', background: '#0f172a', overflow: 'hidden' }}>
       <div style={{ flex: 1, position: 'relative', minHeight: isMobile ? '55vh' : 'unset' }}>
         <Canvas 
           shadows 
@@ -464,7 +464,7 @@ const ShopBuilder = () => {
         </div>
       </div>
 
-      <div style={{ width: isMobile ? '100%' : '340px', maxHeight: isMobile ? '45vh' : 'unset', padding: '16px', background: 'rgba(15,23,42,0.95)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', overflowY: 'auto' }}>
+      <div style={{ width: isMobile ? '100%' : '320px', minWidth: isMobile ? 'unset' : '320px', maxWidth: isMobile ? 'unset' : '320px', height: isMobile ? '45vh' : '100%', padding: '16px', background: 'rgba(15,23,42,0.95)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', overflowY: 'auto', boxSizing: 'border-box' }}>
         <h2 style={{ color: 'white', fontSize: '18px', marginBottom: '16px' }}>Shop Builder</h2>
         
         <div style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(255,255,255,0.08)', padding: '15px', borderRadius: '12px', marginBottom: '16px' }}>
