@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Box, Text, Plane } from '@react-three/drei';
 import API from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Store, MapPin, Package, AlertCircle, X, ChevronRight } from 'lucide-react';
+import { Store, Package, AlertCircle, X, ChevronRight } from 'lucide-react';
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => (window as any).__showToast?.(msg, type);
 
 interface ShopConfig {
@@ -324,10 +324,9 @@ const CustomerSearch: React.FC = () => {
           <p style={{ color: '#94a3b8', marginBottom: '35px', fontSize: '15px' }}>Enter the shop name to start your 3D journey</p>
           
           <div style={{ position: 'relative', marginBottom: '25px' }}>
-            <MapPin size={isMobile ? 20 : 22} color="#4f46e5" style={{ position: 'absolute', left: isMobile ? '15px' : '18px', top: '50%', transform: 'translateY(-50%)', opacity: 0.8, zIndex: 1 }} />
             <input
               type="text"
-              placeholder="      e.g. freshmart"
+              placeholder="e.g. freshmart"
               value={shopName}
               onChange={(e) => handleShopNameInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleShopSelect()}
@@ -337,7 +336,7 @@ const CustomerSearch: React.FC = () => {
               }}
               onBlur={() => setTimeout(() => setShowShopDropdown(false), 150)}
               style={{ 
-                width: '100%', padding: isMobile ? '16px 16px 16px 48px' : '18px 18px 18px 55px', borderRadius: '14px', 
+                width: '100%', padding: '16px 18px', borderRadius: '14px', 
                 border: '1px solid rgba(255,255,255,0.1)', background: '#0f172a', 
                 color: '#f1f5f9', fontSize: '16px', outline: 'none', transition: 'all 0.3s'
               }}
@@ -405,7 +404,6 @@ const CustomerSearch: React.FC = () => {
 
         <div style={{ position: 'relative', display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1, position: 'relative' }}>
-            <Search size={18} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input
               type="text"
               placeholder={isMobile ? "Search..." : "Find a product..."}
@@ -413,7 +411,7 @@ const CustomerSearch: React.FC = () => {
               onChange={(e) => handleSearchInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               style={{ 
-                width: '100%', padding: isMobile ? '10px 10px 10px 38px' : '14px 14px 14px 45px', borderRadius: '10px', 
+                width: '100%', padding: '12px 18px', borderRadius: '10px', 
                 border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', 
                 color: 'white', fontSize: isMobile ? '14px' : '16px', outline: 'none'
               }}

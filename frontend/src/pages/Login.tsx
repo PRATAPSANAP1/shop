@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api';
 import { motion } from 'framer-motion';
-import { Store, Mail, Lock, User, ShoppingBag, Phone } from 'lucide-react';
+import { Store, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { AuthContext } from '../App';
 
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
@@ -90,47 +90,42 @@ const Login = () => {
           {isRegister && (
             <>
               <div style={{ position: 'relative' }}>
-                <User size={17} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input type="text" placeholder="Full Name" value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="login-input"
-                  style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
+                  style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
                   required />
               </div>
               <div style={{ position: 'relative' }}>
-                <ShoppingBag size={17} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input type="text" placeholder="Shop Name" value={formData.shopName}
                   onChange={(e) => setFormData({ ...formData, shopName: e.target.value })}
                   className="login-input"
-                  style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
+                  style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
                   required />
               </div>
               <div style={{ position: 'relative' }}>
-                <Phone size={17} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input type="tel" placeholder="Mobile Number" value={formData.mobile}
                   onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
                   className="login-input"
-                  style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
+                  style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
                   required />
               </div>
             </>
           )}
 
           <div style={{ position: 'relative' }}>
-            <Mail size={17} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
             <input type="email" placeholder="Email Address" value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="login-input"
-              style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
+              style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
               required />
           </div>
 
           <div style={{ position: 'relative' }}>
-            <Lock size={17} color="#64748b" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
             <input type="password" placeholder="Password" value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               className="login-input"
-              style={{ width: '100%', padding: '14px 14px 14px 44px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
+              style={{ width: '100%', padding: '14px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#f1f5f9', fontSize: '15px' }}
               required />
           </div>
 

@@ -217,11 +217,11 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   input.login-input {
-    padding: 14px 14px 14px 44px !important;
+    padding: 14px 18px !important;
   }
 
   input.profile-input {
-    padding: 14px 14px 14px 44px !important;
+    padding: 14px 18px !important;
   }
   
   table {

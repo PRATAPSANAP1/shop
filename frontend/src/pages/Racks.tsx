@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { getRacks, createRack, updateRack, deleteRack } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Tag, Maximize2, Layers, Columns, Edit, Trash2, Plus, X, Move } from 'lucide-react';
+import { Edit, Trash2, Plus, X, Move } from 'lucide-react';
 const showToast = (msg: string, type: 'success' | 'error' = 'success') => (window as any).__showToast?.(msg, type);
 
 const colors = ['#4CAF50', '#2196F3', '#FF9800', '#E91E63', '#9C27B0', '#00BCD4', '#FF5722', '#795548'];
@@ -10,14 +10,13 @@ const BORDER_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#3b82f6', '#
 
 const EMPTY = { rackName: '', positionX: 0, positionY: 0, positionZ: 0, width: 2, height: 3, shelves: 4, columns: 3, orientation: 'vertical', color: '#4CAF50' };
 
-const IconInput = ({ icon: Icon, label, children }: any) => (
+const LabelInput = ({ label, children }: any) => (
   <div>
     <label style={{ display: 'block', color: '#94a3b8', marginBottom: '6px', fontSize: '13px', fontWeight: '500' }}>{label}</label>
     <div style={{ position: 'relative' }}>
-      <Icon size={16} color="#64748b" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 1 }} />
       {React.cloneElement(children, {
         className: 'rack-input',
-        style: { ...children.props.style, width: '100%', paddingLeft: '40px', paddingTop: '11px', paddingBottom: '11px', paddingRight: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white', fontSize: '14px', outline: 'none' }
+        style: { ...children.props.style, width: '100%', paddingLeft: '14px', paddingTop: '11px', paddingBottom: '11px', paddingRight: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white', fontSize: '14px', outline: 'none' }
       })}
     </div>
   </div>
@@ -72,7 +71,6 @@ const Racks = () => {
     <div style={{ padding: isMobile ? '15px' : '30px', width: '100%', margin: '0' }}>
       <style>{`
         .rack-input:focus { border-color: rgba(99,102,241,0.6) !important; box-shadow: 0 0 0 3px rgba(99,102,241,0.12) !important; }
-        @media (max-width: 768px) { .rack-input { padding-left: 40px !important; } }
       `}</style>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
@@ -97,23 +95,23 @@ const Racks = () => {
             <h3 style={{ marginBottom: '20px', color: 'white', fontSize: '18px' }}>{editingRack ? 'Edit Rack' : 'Add New Rack'}</h3>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <IconInput icon={Tag} label="Rack Name">
+              <LabelInput label="Rack Name">
                 <input type="text" placeholder="e.g. Rack A" value={formData.rackName} onChange={e => set('rackName', e.target.value)} required />
-              </IconInput>
+              </LabelInput>
 
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr', gap: '12px' }}>
-                <IconInput icon={Maximize2} label="Width (m)">
+                <LabelInput label="Width (m)">
                   <input type="number" placeholder="2" value={formData.width} onChange={e => set('width', parseFloat(e.target.value))} min="0.5" max="10" step="0.5" required />
-                </IconInput>
-                <IconInput icon={Maximize2} label="Height (m)">
+                </LabelInput>
+                <LabelInput label="Height (m)">
                   <input type="number" placeholder="3" value={formData.height} onChange={e => set('height', parseFloat(e.target.value))} min="0.5" max="5" step="0.5" required />
-                </IconInput>
-                <IconInput icon={Layers} label="Shelves">
+                </LabelInput>
+                <LabelInput label="Shelves">
                   <input type="number" placeholder="4" value={formData.shelves} onChange={e => set('shelves', parseInt(e.target.value))} min="1" max="10" required />
-                </IconInput>
-                <IconInput icon={Columns} label="Columns">
+                </LabelInput>
+                <LabelInput label="Columns">
                   <input type="number" placeholder="3" value={formData.columns} onChange={e => set('columns', parseInt(e.target.value))} min="1" max="10" required />
-                </IconInput>
+                </LabelInput>
               </div>
 
               <div>
