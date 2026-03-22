@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +11,8 @@ export const ToastContext = createContext<ToastContextType>({ showToast: () => {
 export const useToast = () => useContext(ToastContext);
 
 interface AuthContextType { isAuth: boolean; setIsAuth: (v: boolean) => void; authChecked: boolean; }
-export const AuthContext = createContext<AuthContextType>({ isAuth: false, setIsAuth: () => {}, authChecked: false });
+const defaultSetIsAuth = (_v: boolean) => {};
+export const AuthContext = createContext<AuthContextType>({ isAuth: false, setIsAuth: defaultSetIsAuth, authChecked: false });
 export const useAuth = () => useContext(AuthContext);
 
 const ToastContainer = () => {
