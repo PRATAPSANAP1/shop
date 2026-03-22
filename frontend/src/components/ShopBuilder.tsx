@@ -132,11 +132,12 @@ const ShopBuilder = () => {
       background: '#0f172a',
     }}>
 
-      {/* LEFT: 3D Canvas — fixed, never scrolls — 50% on PC */}
+      {/* LEFT: 3D Canvas — fixed, never scrolls — 50% on PC, 50vh on mobile */}
       <div style={{
         position: 'relative',
         width: isMobile ? '100%' : '50%',
-        height: isMobile ? '260px' : '100%',
+        height: isMobile ? '50%' : '100%',
+        minHeight: isMobile ? '50%' : 0,
         flexShrink: 0,
         overflow: 'hidden',
       }}>
@@ -176,11 +177,11 @@ const ShopBuilder = () => {
         </div>
       </div>
 
-      {/* RIGHT: Controls — only this scrolls — 50% on PC */}
+      {/* RIGHT: Controls — only this scrolls — 50% on PC, 50% on mobile */}
       <div style={{
         width: isMobile ? '100%' : '50%',
         flexShrink: 0,
-        height: isMobile ? 'auto' : '100%',
+        height: isMobile ? '50%' : '100%',
         overflowY: 'auto',
         overflowX: 'hidden',
         padding: '12px',
