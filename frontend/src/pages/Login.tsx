@@ -42,17 +42,8 @@ const Login = () => {
   return (
     <div style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '20px', background: '#0f172a', position: 'relative', overflow: 'hidden'
+      padding: '20px', position: 'relative', overflow: 'hidden'
     }}>
-      {/* Animated background boxes */}
-      <div className="animated-bg">
-        {[...Array(12)].map((_, i) => <span key={i} />)}
-      </div>
-
-      {/* Glow blobs */}
-      <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: '50%', height: '50%', background: 'rgba(79,70,229,0.12)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '-15%', left: '-10%', width: '50%', height: '50%', background: 'rgba(16,185,129,0.08)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
-
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

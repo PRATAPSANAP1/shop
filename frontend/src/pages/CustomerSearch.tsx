@@ -290,9 +290,6 @@ const CustomerSearch: React.FC = () => {
         position: 'relative',
         overflow: 'hidden'
       }}>
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '40%', height: '40%', background: 'rgba(79, 70, 229, 0.15)', filter: 'blur(100px)', borderRadius: '50%' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', left: '-5%', width: '40%', height: '40%', background: 'rgba(16, 185, 129, 0.1)', filter: 'blur(100px)', borderRadius: '50%' }} />
-
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

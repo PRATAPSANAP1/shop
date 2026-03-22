@@ -285,7 +285,12 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-      <ToastContainer />
+        <div className="animated-bg">
+          {[...Array(12)].map((_, i) => <span key={i} />)}
+        </div>
+        <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: '50%', height: '50%', background: 'rgba(79,70,229,0.12)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-15%', left: '-10%', width: '50%', height: '50%', background: 'rgba(16,185,129,0.08)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
+        <ToastContainer />
       <Routes>
         <Route path="/" element={<CustomerSearch />} />
         <Route path="/search" element={<CustomerSearch />} />
