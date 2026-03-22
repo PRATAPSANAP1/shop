@@ -115,7 +115,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
+      setIsMobile(window.innerWidth <= 480);
       if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
     };
     window.addEventListener('resize', handleResize);
@@ -273,9 +273,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   useEffect(() => {
+    // Clear old token format or storage types
+    if (localStorage.getItem('shop_token')) {
+      localStorage.removeItem('shop_token');
+    }
+    
     getMe()
       .then(({ data }) => setIsAuth(!!data))
-      .catch(() => setIsAuth(false))
+      .catch(() => {
+        setIsAuth(false);
+        sessionStorage.removeItem('shop_token');
+      })
       .finally(() => setAuthChecked(true));
   }, []);
   return <AuthContext.Provider value={{ isAuth, setIsAuth, authChecked }}>{children}</AuthContext.Provider>;

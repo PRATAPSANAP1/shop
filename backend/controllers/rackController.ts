@@ -14,9 +14,10 @@ export const createRack = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const updateRack = async (req: Request, res: Response) => {
+export const updateRack = async (req: AuthRequest, res: Response) => {
   try {
-    const rack = await Rack.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const rack = await Rack.findOneAndUpdate({ _id: req.params.id, shopId: req.userId }, req.body, { new: true });
+    if (!rack) return res.status(404).json({ error: 'Rack not found or unauthorized' });
     res.json(rack);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -49,9 +50,10 @@ export const getRacks = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const deleteRack = async (req: Request, res: Response) => {
+export const deleteRack = async (req: AuthRequest, res: Response) => {
   try {
-    await Rack.findByIdAndDelete(req.params.id);
+    const rack = await Rack.findOneAndDelete({ _id: req.params.id, shopId: req.userId });
+    if (!rack) return res.status(404).json({ error: 'Rack not found or unauthorized' });
     res.json({ message: 'Rack deleted' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

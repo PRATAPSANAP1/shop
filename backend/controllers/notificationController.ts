@@ -11,9 +11,10 @@ export const getNotifications = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const markAsRead = async (req: Request, res: Response) => {
+export const markAsRead = async (req: AuthRequest, res: Response) => {
   try {
-    await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
+    const notification = await Notification.findOneAndUpdate({ _id: req.params.id, shopId: req.userId }, { isRead: true });
+    if (!notification) return res.status(404).json({ error: 'Notification not found or unauthorized' });
     res.json({ message: 'Marked as read' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

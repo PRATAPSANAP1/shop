@@ -16,13 +16,16 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 480);
   const navigate = useNavigate();
-  const { setIsAuth } = React.useContext(AuthContext);
+  const { isAuth, setIsAuth } = React.useContext(AuthContext);
 
   React.useEffect(() => {
+    if (isAuth) {
+      navigate('/admin/home');
+    }
     const handleResize = () => setIsMobile(window.innerWidth <= 480);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isAuth, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

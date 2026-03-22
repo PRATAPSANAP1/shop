@@ -42,9 +42,10 @@ export const getProductsByRack = async (req: AuthRequest, res: Response) => {
 
 export const updateProduct = async (req: AuthRequest, res: Response) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const product = await Product.findOneAndUpdate({ _id: req.params.id, shopId: req.userId }, req.body, { new: true });
+    if (!product) return res.status(404).json({ error: 'Product not found or unauthorized' });
     
-    if (product && product.quantity < product.minStockLevel) {
+    if (product.quantity < product.minStockLevel) {
       await sendNotification(req.userId as string, product._id.toString(), 'lowStock', `${product.productName} is low on stock (${product.quantity} left)`);
     }
     
@@ -75,9 +76,10 @@ export const scanProduct = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteProduct = async (req: Request, res: Response) => {
+export const deleteProduct = async (req: AuthRequest, res: Response) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    const product = await Product.findOneAndDelete({ _id: req.params.id, shopId: req.userId });
+    if (!product) return res.status(404).json({ error: 'Product not found or unauthorized' });
     res.json({ message: 'Product deleted' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
