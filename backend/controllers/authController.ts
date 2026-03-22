@@ -13,6 +13,11 @@ const COOKIE_OPTS = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
+const sendToken = (res: Response, token: string) => {
+  res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
+  res.setHeader('X-Auth-Token', token);
+};
+
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, shopName, mobile } = req.body;
@@ -30,8 +35,8 @@ export const register = async (req: Request, res: Response) => {
     user.token = token;
     await user.save();
 
-    res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
-    res.status(201).json({ userId: user._id, shopName: user.shopName, mobile: user.mobile });
+    sendToken(res, token);
+    res.status(201).json({ userId: user._id, shopName: user.shopName, mobile: user.mobile, token });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -50,8 +55,8 @@ export const login = async (req: Request, res: Response) => {
     user.token = token;
     await user.save();
 
-    res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
-    res.json({ userId: user._id, shopName: user.shopName });
+    sendToken(res, token);
+    res.json({ userId: user._id, shopName: user.shopName, token });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
