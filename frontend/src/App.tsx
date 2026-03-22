@@ -273,17 +273,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   useEffect(() => {
-    // Clear old token format or storage types
-    if (localStorage.getItem('shop_token')) {
-      localStorage.removeItem('shop_token');
-    }
-    
     getMe()
       .then(({ data }) => setIsAuth(!!data))
-      .catch(() => {
-        setIsAuth(false);
-        sessionStorage.removeItem('shop_token');
-      })
+      .catch(() => setIsAuth(false))
       .finally(() => setAuthChecked(true));
   }, []);
   return <AuthContext.Provider value={{ isAuth, setIsAuth, authChecked }}>{children}</AuthContext.Provider>;

@@ -7,6 +7,7 @@ export interface AuthRequest extends Request {
 }
 
 const authFactory = (optional = false) => async (req: AuthRequest, res: Response, next: NextFunction) => {
+  console.log("Cookies:", req.cookies);
   let token = req.cookies?.shop_token;
   
   if (!token && req.headers.authorization?.startsWith('Bearer ')) {
