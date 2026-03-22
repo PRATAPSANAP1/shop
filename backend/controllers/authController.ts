@@ -5,11 +5,11 @@ import User from '../models/User';
 import { AuthRequest } from '../middleware/auth';
 
 const COOKIE_NAME = 'shop_token';
-const isProd = process.env.NODE_ENV === 'production';
 const COOKIE_OPTS = {
   httpOnly: true,
-  secure: isProd,
-  sameSite: (isProd ? 'none' : 'lax') as 'none' | 'lax',
+  secure: true,
+  sameSite: 'none' as const,
+  maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
 
