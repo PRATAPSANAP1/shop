@@ -5,22 +5,12 @@ const API = axios.create({
   withCredentials: true,
 });
 
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem('shop_token');
-  if (token) config.headers['Authorization'] = `Bearer ${token}`;
-  return config;
-});
-
 API.interceptors.response.use(
-  (res) => {
-    if (res.data?.token) localStorage.setItem('shop_token', res.data.token);
-    return res;
-  },
+  (res) => res,
   (error) => {
     const url = error.config?.url || '';
     const isAuthCheck = url.includes('/auth/me') || url.includes('/auth/login') || url.includes('/auth/register');
     if (error.response?.status === 401 && !isAuthCheck && !window.location.pathname.includes('/admin/login')) {
-      localStorage.removeItem('shop_token');
       window.location.href = '/admin/login';
     }
     return Promise.reject(error);
@@ -29,7 +19,7 @@ API.interceptors.response.use(
 
 export const login = (data) => API.post('/auth/login', data);
 export const register = (data) => API.post('/auth/register', data);
-export const logout = () => { localStorage.removeItem('shop_token'); return API.post('/auth/logout'); };
+export const logout = () => API.post('/auth/logout');
 export const getMe = () => API.get('/auth/me');
 export const getRacks = () => API.get('/racks');
 export const createRack = (data) => API.post('/racks', data);
