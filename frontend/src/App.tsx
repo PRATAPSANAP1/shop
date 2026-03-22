@@ -77,7 +77,6 @@ import { getMe, logout } from './services/api';
 const SidebarLink = ({ to, icon: Icon, children, onClick }: { to: string, icon: any, children: React.ReactNode, onClick?: () => void }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-  
   return (
     <Link to={to} onClick={onClick} style={{ textDecoration: 'none' }}>
       <motion.div
@@ -86,14 +85,14 @@ const SidebarLink = ({ to, icon: Icon, children, onClick }: { to: string, icon: 
         style={{
           display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px',
           marginBottom: '8px', borderRadius: '12px',
-          background: isActive ? 'linear-gradient(135deg, rgba(79, 70, 229, 0.8) 0%, rgba(59, 130, 246, 0.8) 100%)' : 'transparent',
+          background: isActive ? 'linear-gradient(135deg, rgba(79,70,229,0.8) 0%, rgba(59,130,246,0.8) 100%)' : 'transparent',
           color: isActive ? 'white' : '#cbd5e1',
           fontWeight: isActive ? '600' : '400',
           transition: 'color 0.2s',
           border: isActive ? '1px solid rgba(255,255,255,0.2)' : '1px solid transparent'
         }}
       >
-        <Icon size={20} color={isActive ? "white" : "#94a3b8"} />
+        <Icon size={20} color={isActive ? 'white' : '#94a3b8'} />
         {children}
       </motion.div>
     </Link>
@@ -110,13 +109,13 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { isAuth, authChecked } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const location = useLocation();
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 480);
-      if (window.innerWidth > 1024) setIsMobileMenuOpen(false);
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) setIsMobileMenuOpen(false);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -130,12 +129,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const sidebarContent = (
     <>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '40px', padding: '0 10px' }}>
-        <div style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)', padding: '8px', borderRadius: '10px' }}>
+        <div style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)', padding: '8px', borderRadius: '10px', flexShrink: 0 }}>
           <Store size={24} color="white" />
         </div>
         <h2 style={{ fontSize: '20px', fontWeight: '700', color: 'white', letterSpacing: '-0.5px', margin: 0 }}>Admin Panel</h2>
       </div>
-      
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <SidebarLink to="/admin/home" icon={HomeIcon}>Home</SidebarLink>
         <SidebarLink to="/admin/dashboard" icon={LayoutDashboard}>Dashboard</SidebarLink>
@@ -147,15 +145,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <SidebarLink to="/admin/smartstore" icon={TrendingUp}>SmartStore AI</SidebarLink>
         <SidebarLink to="/admin/profile" icon={User}>Profile</SidebarLink>
       </div>
-
-      <motion.button 
-        whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.2)' }}
+      <motion.button
+        whileHover={{ scale: 1.02, backgroundColor: 'rgba(239,68,68,0.2)' }}
         whileTap={{ scale: 0.98 }}
-        onClick={() => { logout().finally(() => { window.location.href = '/admin/login'; }); }} 
-        style={{ 
+        onClick={() => { logout().finally(() => { window.location.href = '/admin/login'; }); }}
+        style={{
           marginTop: '20px', width: '100%', padding: '14px', borderRadius: '12px',
-          background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)',
-          color: '#ef4444', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer'
+          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
+          color: '#ef4444', fontWeight: '600', display: 'flex', alignItems: 'center',
+          justifyContent: 'center', gap: '8px', cursor: 'pointer'
         }}
       >
         <LogOut size={18} /> Logout
@@ -165,38 +163,39 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', maxWidth: '100vw' }}>
         {!isMobile && (
-          <motion.nav 
+          <motion.nav
             initial={{ x: -300 }} animate={{ x: 0 }}
             className="glass-panel"
-            style={{ width: '280px', margin: '15px', padding: '25px 20px', display: 'flex', flexDirection: 'column', zIndex: 40 }}
+            style={{ width: '260px', minWidth: '260px', margin: '15px', padding: '25px 20px', display: 'flex', flexDirection: 'column', zIndex: 40, overflow: 'hidden' }}
           >
             {sidebarContent}
           </motion.nav>
         )}
 
         {isMobile && (
-          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: '10px', left: '10px', right: '10px', height: '60px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Store size={20} color="#818cf8" />
-              <h2 style={{ fontSize: '18px', margin: 0, color: 'white' }}>Admin Panel</h2>
+          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: '10px', left: '10px', right: '10px', height: '56px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+              <Store size={18} color="#818cf8" style={{ flexShrink: 0 }} />
+              <h2 style={{ fontSize: '16px', margin: 0, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Admin Panel</h2>
             </div>
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white', padding: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'auto' }}>
-              <Menu size={22} />
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white', padding: '7px', display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0 }}>
+              <Menu size={20} />
             </button>
           </div>
         )}
 
-        <div style={{ 
-          flex: 1, overflowY: 'auto', padding: isMobile ? '80px 10px 10px 10px' : '15px 15px 15px 0',
+        <div style={{
+          flex: 1, minWidth: 0, overflowY: 'auto', overflowX: 'hidden', scrollBehavior: 'smooth',
+          padding: isMobile ? '76px 8px 8px 8px' : '15px 15px 15px 0',
           display: 'flex', flexDirection: 'column'
         }}>
           <AnimatePresence mode="wait">
-            <motion.div 
+            <motion.div
               key={location.pathname}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}
-              style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+              style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}
             >
               {children}
             </motion.div>
@@ -207,7 +206,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <AnimatePresence>
         {isMobile && isMobileMenuOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
               style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)', zIndex: 200 }}
@@ -215,29 +214,24 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <motion.div
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               style={{
-                position: 'fixed', top: 0, left: 0, width: '75vw', maxWidth: '320px', height: '100vh',
-                padding: '24px 20px', display: 'flex', flexDirection: 'column', zIndex: 210,
+                position: 'fixed', top: 0, left: 0, width: '75vw', maxWidth: '300px', height: '100vh',
+                padding: '24px 16px', display: 'flex', flexDirection: 'column', zIndex: 210,
                 borderRadius: '0 24px 24px 0', boxSizing: 'border-box',
                 background: 'rgba(15,23,42,0.97)', backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                boxShadow: '4px 0 40px rgba(0,0,0,0.6)'
+                border: '1px solid rgba(255,255,255,0.08)', boxShadow: '4px 0 40px rgba(0,0,0,0.6)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', paddingTop: '8px', flexDirection: 'row' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', paddingTop: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ background: 'linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)', padding: '8px', borderRadius: '10px', flexShrink: 0 }}>
-                    <Store size={22} color="white" />
+                    <Store size={20} color="white" />
                   </div>
-                  <span style={{ fontSize: '18px', fontWeight: '700', color: 'white' }}>Admin Panel</span>
+                  <span style={{ fontSize: '17px', fontWeight: '700', color: 'white' }}>Admin Panel</span>
                 </div>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: '#94a3b8', padding: '8px', display: 'flex', alignItems: 'center', cursor: 'pointer', flexShrink: 0, width: 'auto' }}
-                >
-                  <X size={20} />
+                <button onClick={() => setIsMobileMenuOpen(false)} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: '#94a3b8', padding: '7px', display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                  <X size={18} />
                 </button>
               </div>
-
               <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
                 <SidebarLink to="/admin/home" icon={HomeIcon}>Home</SidebarLink>
                 <SidebarLink to="/admin/dashboard" icon={LayoutDashboard}>Dashboard</SidebarLink>
@@ -249,15 +243,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <SidebarLink to="/admin/smartstore" icon={TrendingUp}>SmartStore AI</SidebarLink>
                 <SidebarLink to="/admin/profile" icon={User}>Profile</SidebarLink>
               </div>
-
               <button
                 onClick={() => { logout().finally(() => { window.location.href = '/admin/login'; }); }}
-                style={{
-                  marginTop: '20px', width: '100%', padding: '14px', borderRadius: '12px',
-                  background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-                  color: '#ef4444', fontWeight: '600', display: 'flex', alignItems: 'center',
-                  justifyContent: 'center', gap: '8px', cursor: 'pointer', flexShrink: 0
-                }}
+                style={{ marginTop: '20px', width: '100%', padding: '13px', borderRadius: '12px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer', flexShrink: 0 }}
               >
                 <LogOut size={18} /> Logout
               </button>
@@ -291,21 +279,21 @@ function App() {
         <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: '50%', height: '50%', background: 'rgba(79,70,229,0.12)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-15%', left: '-10%', width: '50%', height: '50%', background: 'rgba(16,185,129,0.08)', filter: 'blur(120px)', borderRadius: '50%', pointerEvents: 'none' }} />
         <ToastContainer />
-      <Routes>
-        <Route path="/" element={<CustomerSearch />} />
-        <Route path="/search" element={<CustomerSearch />} />
-        <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
-        <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/admin/home" element={<Layout><ShopView3D /></Layout>} />
-        <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/admin/notifications" element={<Layout><Notifications /></Layout>} />
-        <Route path="/admin/shop-builder" element={<Layout><ShopBuilder /></Layout>} />
-        <Route path="/admin/products" element={<Layout><Products /></Layout>} />
-        <Route path="/admin/racks" element={<Layout><Racks /></Layout>} />
-        <Route path="/admin/scanner" element={<Layout><Scanner /></Layout>} />
-        <Route path="/admin/smartstore" element={<Layout><SmartStore /></Layout>} />
-        <Route path="/admin/profile" element={<Layout><Profile /></Layout>} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<CustomerSearch />} />
+          <Route path="/search" element={<CustomerSearch />} />
+          <Route path="/admin" element={<Navigate to="/admin/home" replace />} />
+          <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/admin/home" element={<Layout><ShopView3D /></Layout>} />
+          <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
+          <Route path="/admin/notifications" element={<Layout><Notifications /></Layout>} />
+          <Route path="/admin/shop-builder" element={<Layout><ShopBuilder /></Layout>} />
+          <Route path="/admin/products" element={<Layout><Products /></Layout>} />
+          <Route path="/admin/racks" element={<Layout><Racks /></Layout>} />
+          <Route path="/admin/scanner" element={<Layout><Scanner /></Layout>} />
+          <Route path="/admin/smartstore" element={<Layout><SmartStore /></Layout>} />
+          <Route path="/admin/profile" element={<Layout><Profile /></Layout>} />
+        </Routes>
       </AuthProvider>
     </BrowserRouter>
   );

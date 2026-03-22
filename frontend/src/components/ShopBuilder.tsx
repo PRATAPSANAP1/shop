@@ -364,7 +364,7 @@ const ShopBuilder = () => {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: isMobile ? 'column' : 'row', background: '#0f172a', overflow: 'hidden' }}>
-      <div style={{ flex: '0 0 55%', position: 'relative', minHeight: isMobile ? '40vh' : 'unset' }}>
+      <div style={{ flex: '0 0 50%', position: 'relative', minHeight: isMobile ? '40vh' : 'unset' }}>
         <Canvas 
           shadows 
           camera={{ position: [15, 15, 15], fov: 50 }}
@@ -464,7 +464,7 @@ const ShopBuilder = () => {
         </div>
       </div>
 
-      <div style={{ flex: '0 0 45%', height: isMobile ? '60vh' : '100%', padding: '12px', background: 'rgba(15,23,42,0.95)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
+      <div style={{ flex: '0 0 50%', height: isMobile ? '60vh' : '100%', padding: '12px', background: 'rgba(15,23,42,0.95)', borderTop: isMobile ? '1px solid rgba(255,255,255,0.08)' : 'none', borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,0.08)', overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
         <h2 style={{ color: 'white', fontSize: '18px', marginBottom: '16px' }}>Shop Builder</h2>
         
         <div style={{ background: 'rgba(30,41,59,0.8)', border: '1px solid rgba(255,255,255,0.08)', padding: '15px', borderRadius: '12px', marginBottom: '16px' }}>
