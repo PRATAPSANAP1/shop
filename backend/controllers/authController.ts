@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response) => {
     await user.save();
 
     res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
-    res.status(201).json({ userId: user._id, shopName: user.shopName, mobile: user.mobile });
+    res.status(201).json({ userId: user._id, shopName: user.shopName, mobile: user.mobile, token });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -53,7 +53,7 @@ export const login = async (req: Request, res: Response) => {
     await user.save();
 
     res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
-    res.json({ userId: user._id, shopName: user.shopName });
+    res.json({ userId: user._id, shopName: user.shopName, token });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -72,7 +72,7 @@ export const logout = async (req: AuthRequest, res: Response) => {
 export const getMe = async (req: AuthRequest, res: Response) => {
   try {
     const user = await User.findById(req.userId).select('-password -token -otp -otpExpires');
-    if (!user) return res.status(401).json({ error: 'Not authenticated' });
+    if (!user) return res.json(null);
     res.json(user);
   } catch (error: any) {
     res.status(500).json({ error: error.message });

@@ -273,7 +273,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   useEffect(() => {
-    getMe().then(() => setIsAuth(true)).catch(() => setIsAuth(false)).finally(() => setAuthChecked(true));
+    getMe()
+      .then(({ data }) => setIsAuth(!!data))
+      .catch(() => setIsAuth(false))
+      .finally(() => setAuthChecked(true));
   }, []);
   return <AuthContext.Provider value={{ isAuth, setIsAuth, authChecked }}>{children}</AuthContext.Provider>;
 };
