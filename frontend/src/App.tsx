@@ -285,7 +285,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const setLastActive = () => localStorage.setItem(KEY, String(Date.now()));
 
     const heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 2 * 60 * 1000);
+
     const checkInterval = setInterval(() => {
+      if (document.hidden) return;
       const last = Number(localStorage.getItem(KEY) || 0);
       if (last && Date.now() - last > TIMEOUT) doLogout();
     }, 1000);
@@ -293,15 +295,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
     events.forEach(e => window.addEventListener(e, setLastActive));
 
-    const onFocus = () => setLastActive();
-    window.addEventListener('focus', onFocus);
+    const onVisibilityChange = () => { if (!document.hidden) setLastActive(); };
+    document.addEventListener('visibilitychange', onVisibilityChange);
     setLastActive();
 
     return () => {
       clearInterval(heartbeatInterval);
       clearInterval(checkInterval);
       events.forEach(e => window.removeEventListener(e, setLastActive));
-      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [isAuth]);
 
