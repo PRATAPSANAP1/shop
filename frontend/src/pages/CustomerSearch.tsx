@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useState, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Box, Text, Plane } from '@react-three/drei';
 import API from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -51,6 +51,48 @@ interface Product {
   rackId?: Rack;
 }
 
+// Glowing product box
+const GlowBox = ({ args, color, glow }: any) => {
+  const ref = useRef<any>();
+  useFrame(({ clock }) => {
+    if (ref.current && glow) {
+      ref.current.emissiveIntensity = 1.5 + Math.sin(clock.getElapsedTime() * 4) * 1.0;
+    }
+  });
+  return (
+    <Box args={args} castShadow>
+      <meshStandardMaterial ref={ref} color={glow ? '#22c55e' : color} emissive={glow ? '#22c55e' : color} emissiveIntensity={glow ? 1.5 : 0.2} />
+    </Box>
+  );
+};
+
+// Bouncing arrow above rack
+const BouncingArrow = ({ height, rackName }: any) => {
+  const ref = useRef<any>();
+  useFrame(({ clock }) => {
+    if (ref.current) {
+      ref.current.position.y = height / 2 + 1.2 + Math.sin(clock.getElapsedTime() * 3) * 0.25;
+    }
+  });
+  return (
+    <group ref={ref}>
+      {/* Arrow head pointing down */}
+      <mesh rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.3, 0.6, 8]} />
+        <meshBasicMaterial color="#22c55e" />
+      </mesh>
+      {/* Arrow stem */}
+      <mesh position={[0, 0.5, 0]}>
+        <cylinderGeometry args={[0.08, 0.08, 0.5, 8]} />
+        <meshBasicMaterial color="#22c55e" />
+      </mesh>
+      <Text position={[0, 1.1, 0]} fontSize={0.25} color="#22c55e" fontWeight="bold" anchorX="center" anchorY="bottom">
+        {rackName}
+      </Text>
+    </group>
+  );
+};
+
 const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, setSelectedProduct }: any) => {
   const width = rack.width || 2;
   const height = rack.height || 3;
@@ -98,60 +140,19 @@ const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, 
         const productColors = ['#f97316','#8b5cf6','#06b6d4','#ec4899','#10b981','#f59e0b','#3b82f6','#ef4444'];
         const isProductHighlighted = highlightedProductId === product._id;
         const productColor = isProductHighlighted ? '#22c55e' : productColors[index % productColors.length];
-        
+
         return (
-          <group
-            key={product._id}
-            position={[productX, productY, 0.15]}
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedProduct(product);
-            }}
-          >
-            <Box args={productSize} castShadow>
-              <meshStandardMaterial 
-                color={productColor}
-                emissive={isProductHighlighted ? '#22c55e' : productColor}
-                emissiveIntensity={isProductHighlighted ? 2 : 0.2}
-              />
-            </Box>
+          <group key={product._id} position={[productX, productY, 0.15]} onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}>
+            <GlowBox args={productSize} color={productColor} glow={isProductHighlighted} />
             <Text position={[0, productSize[1]/2 + 0.08, 0.12]} fontSize={0.12} color="white" fontWeight="bold" anchorX="center" anchorY="bottom" maxWidth={productSize[0]}>
               {product.productName}
             </Text>
-
-            {isProductHighlighted && (
-              <group position={[0, 0, 0]}>
-                <mesh position={[0, height / 2, 0]}>
-                  <cylinderGeometry args={[0.05, 0.2, 10, 8]} />
-                  <meshStandardMaterial 
-                    color="#22c55e" 
-                    emissive="#22c55e" 
-                    emissiveIntensity={5} 
-                    transparent 
-                    opacity={0.4} 
-                  />
-                </mesh>
-
-                <group position={[0, height / 2 + 1, 0.5]}>
-                  <Box args={[1.5, 0.5, 0.01]}>
-                    <meshStandardMaterial color="#166534" />
-                  </Box>
-                  <Text position={[0, 0, 0.02]} fontSize={0.18} color="white" fontWeight="bold">
-                    {`Your ${product.productName}`}
-                  </Text>
-                  
-                  <mesh position={[0, 0, -0.01]}>
-                    <planeGeometry args={[1.7, 0.7]} />
-                    <meshBasicMaterial color="#22c55e" transparent opacity={0.3} />
-                  </mesh>
-                </group>
-
-                <pointLight position={[0, -1, 0]} intensity={5} color="#22c55e" distance={5} />
-              </group>
-            )}
           </group>
         );
       })}
+
+      {/* Bouncing arrow above rack when highlighted */}
+      {isHighlighted && <BouncingArrow height={height} rackName={rack.rackName} />}
     </group>
   );
 };
