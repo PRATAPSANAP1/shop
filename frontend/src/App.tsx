@@ -268,12 +268,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setAuthChecked(true));
   }, []);
 
-  // Heartbeat + inactivity + tab-close logic
+  // Heartbeat + inactivity logout (cross-tab via localStorage)
   useEffect(() => {
     if (!isAuth) return;
 
-    let inactivityTimer: ReturnType<typeof setTimeout>;
-    let heartbeatInterval: ReturnType<typeof setInterval>;
+    const TIMEOUT = 5 * 60 * 1000;
+    const KEY = 'lastActive';
 
     const doLogout = () => {
       logout().finally(() => {
@@ -282,21 +282,22 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
     };
 
-    const resetInactivity = () => {
-      clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(doLogout, 5 * 60 * 1000);
-    };
+    const setLastActive = () => localStorage.setItem(KEY, String(Date.now()));
 
-    heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
+    const heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
+    const checkInterval = setInterval(() => {
+      const last = Number(localStorage.getItem(KEY) || 0);
+      if (Date.now() - last > TIMEOUT) doLogout();
+    }, 1000);
 
     const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-    events.forEach(e => window.addEventListener(e, resetInactivity));
-    resetInactivity();
+    events.forEach(e => window.addEventListener(e, setLastActive));
+    setLastActive();
 
     return () => {
-      clearTimeout(inactivityTimer);
       clearInterval(heartbeatInterval);
-      events.forEach(e => window.removeEventListener(e, resetInactivity));
+      clearInterval(checkInterval);
+      events.forEach(e => window.removeEventListener(e, setLastActive));
     };
   }, [isAuth]);
 
