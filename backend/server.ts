@@ -66,5 +66,14 @@ app.use('/api/doors', doorRoutes);
 app.use('/api/shop', shopRoutes);
 app.use('/api/smartstore', smartstoreRoutes);
 
+app.get('/api/test', (_req, res) => {
+  res.json({ message: 'Backend is working!' });
+});
+
+app.get('/heartbeat', (_req, res) => {
+  console.log('💓 Heartbeat received at', new Date().toLocaleString());
+  res.send('Server is alive 👍');
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
