@@ -143,7 +143,7 @@ const Products = () => {
   const categories = Array.from(new Set(products.map(p => p.category)));
 
   return (
-    <div style={{ padding: isMobile ? '20px 15px' : '30px', maxWidth: '1400px', margin: '0 auto' }}>
+    <div style={{ padding: isMobile ? '20px 15px' : '30px', maxWidth: '1400px', margin: '0 auto', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
       <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center', gap: '20px', marginBottom: '30px' }}>
         <h1 className="gradient-text" style={{ fontSize: isMobile ? '28px' : '32px', margin: 0, fontWeight: '800' }}>Product Inventory</h1>
         <motion.button 
@@ -206,6 +206,7 @@ const Products = () => {
         </div>
       </div>
 
+      <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: getGridCols(), gap: isMobile ? '14px' : '20px' }}>
         {loading
           ? [...Array(getGridCols().split(',').length * 2)].map((_, i) => (
@@ -293,6 +294,7 @@ const Products = () => {
           ))}
           </AnimatePresence>
         }
+      </div>
       </div>
 
       {showForm && (
