@@ -508,19 +508,19 @@ const CustomerSearch: React.FC = () => {
           {/* Walls — sized exactly to shopConfig dimensions */}
           {/* Back wall */}
           <Box args={[shopConfig.width, 4, 0.3]} position={[0, 2, -shopConfig.depth / 2]}>
-            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+            <meshStandardMaterial color="#94a3b8" transparent opacity={0.08} depthWrite={false} />
           </Box>
           {/* Front wall */}
           <Box args={[shopConfig.width, 4, 0.3]} position={[0, 2, shopConfig.depth / 2]}>
-            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+            <meshStandardMaterial color="#94a3b8" transparent opacity={0.08} depthWrite={false} />
           </Box>
           {/* Left wall */}
           <Box args={[0.3, 4, shopConfig.depth]} position={[-shopConfig.width / 2, 2, 0]}>
-            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+            <meshStandardMaterial color="#94a3b8" transparent opacity={0.08} depthWrite={false} />
           </Box>
           {/* Right wall */}
           <Box args={[0.3, 4, shopConfig.depth]} position={[shopConfig.width / 2, 2, 0]}>
-            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+            <meshStandardMaterial color="#94a3b8" transparent opacity={0.08} depthWrite={false} />
           </Box>
 
           {doors.map((door) => (
