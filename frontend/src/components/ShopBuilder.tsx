@@ -237,10 +237,10 @@ const ShopBuilder = () => {
             <h3 style={{ marginBottom: '10px', color: 'white', fontSize: '13px' }}>{editingRack ? 'Edit Rack' : 'New Rack'}</h3>
             <input type="text" placeholder="Rack Name" value={formData.rackName} onChange={(e) => setFormData({ ...formData, rackName: e.target.value })} style={{ ...inp, marginBottom: '8px' }} required />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <div><label style={lbl}>Width: {formData.width}m</label><input type="range" min="0.5" max="5" step="0.5" value={formData.width} onChange={(e) => setFormData({ ...formData, width: parseFloat(e.target.value) })} style={{ width: '100%' }} /></div>
-              <div><label style={lbl}>Height: {formData.height}m</label><input type="range" min="1" max="4" step="0.5" value={formData.height} onChange={(e) => setFormData({ ...formData, height: parseFloat(e.target.value) })} style={{ width: '100%' }} /></div>
-              <div><label style={lbl}>Shelves: {formData.shelves}</label><input type="range" min="2" max="8" value={formData.shelves} onChange={(e) => setFormData({ ...formData, shelves: parseInt(e.target.value) })} style={{ width: '100%' }} /></div>
-              <div><label style={lbl}>Columns: {formData.columns}</label><input type="range" min="2" max="6" value={formData.columns} onChange={(e) => setFormData({ ...formData, columns: parseInt(e.target.value) })} style={{ width: '100%' }} /></div>
+              <div><label style={lbl}>Width (m)</label><input type="number" min="0.5" step="0.5" value={formData.width} onChange={(e) => setFormData({ ...formData, width: parseFloat(e.target.value)||0.5 })} style={inp} /></div>
+              <div><label style={lbl}>Height (m)</label><input type="number" min="1" step="0.5" value={formData.height} onChange={(e) => setFormData({ ...formData, height: parseFloat(e.target.value)||1 })} style={inp} /></div>
+              <div><label style={lbl}>Shelves</label><input type="number" min="1" step="1" value={formData.shelves} onChange={(e) => setFormData({ ...formData, shelves: parseInt(e.target.value)||1 })} style={inp} /></div>
+              <div><label style={lbl}>Columns</label><input type="number" min="1" step="1" value={formData.columns} onChange={(e) => setFormData({ ...formData, columns: parseInt(e.target.value)||1 })} style={inp} /></div>
             </div>
             <label style={lbl}>Pos X: {formData.positionX}</label>
             <input type="range" min={-shopDimensions.width/2} max={shopDimensions.width/2} step="0.5" value={formData.positionX} onChange={(e) => setFormData({ ...formData, positionX: parseFloat(e.target.value) })} style={{ width: '100%' }} />
