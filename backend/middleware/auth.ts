@@ -41,6 +41,10 @@ const authFactory = (optional = false) => async (req: AuthRequest, res: Response
       return res.status(401).json({ error: 'Session expired due to inactivity' });
     }
 
+    // Refresh expiry on every request (activity)
+    user.tokenExpiry = new Date(Date.now() + FIVE_MIN);
+    await user.save();
+
     req.userId = String(user._id);
     next();
   } catch (error) {
