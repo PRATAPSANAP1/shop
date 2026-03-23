@@ -93,7 +93,7 @@ const BouncingArrow = ({ height, rackName }: any) => {
   );
 };
 
-const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, setSelectedProduct, searchActive }: any) => {
+const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, setSelectedProduct, searchActive, clickedProductId }: any) => {
   const width = rack.width || 2;
   const height = rack.height || 3;
   const depth = 0.3;
@@ -139,11 +139,13 @@ const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, 
         const productSize = [columnWidth * 0.7, shelfHeight * 0.6, 0.2] as [number, number, number];
         const productColors = ['#f97316','#8b5cf6','#06b6d4','#ec4899','#10b981','#f59e0b','#3b82f6','#ef4444'];
         const isProductHighlighted = highlightedProductId === product._id;
-        const productColor = isProductHighlighted ? '#22c55e' : productColors[index % productColors.length];
+        const isClicked = clickedProductId === product._id;
+        const productColor = isProductHighlighted ? '#22c55e' : isClicked ? '#f59e0b' : productColors[index % productColors.length];
+        const shouldDim = searchActive && !isProductHighlighted && !isClicked;
 
         return (
           <group key={product._id} position={[productX, productY, 0.15]} onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}>
-            <GlowBox args={productSize} color={productColor} glow={isProductHighlighted} dimmed={searchActive && !isProductHighlighted} />
+            <GlowBox args={productSize} color={productColor} glow={isProductHighlighted || isClicked} dimmed={shouldDim} />
             <Text position={[0, productSize[1]/2 + 0.08, 0.12]} fontSize={0.12} color="white" fontWeight="bold" anchorX="center" anchorY="bottom" maxWidth={productSize[0]}>
               {product.productName}
             </Text>
@@ -174,6 +176,7 @@ const CustomerSearch: React.FC = () => {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [clickedProductId, setClickedProductId] = useState<string | null>(null);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [shopSuggestions, setShopSuggestions] = useState<string[]>([]);
@@ -233,6 +236,11 @@ const CustomerSearch: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    setClickedProductId(product._id);
   };
 
   const handleSearch = async () => {
@@ -547,8 +555,9 @@ const CustomerSearch: React.FC = () => {
               products={rackProducts[rack._id] || []} 
               isHighlighted={showArrow && foundProduct && foundProduct.rackId?._id === rack._id} 
               highlightedProductId={foundProduct?._id} 
-              setSelectedProduct={setSelectedProduct}
+              setSelectedProduct={handleProductClick}
               searchActive={showArrow}
+              clickedProductId={clickedProductId}
             />
           ))}
 
@@ -569,63 +578,52 @@ const CustomerSearch: React.FC = () => {
 
       <AnimatePresence>
         {selectedProduct && (
-          <motion.div 
-            initial={{ opacity: 0, y: '100%' }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="glass-panel"
-            style={{ 
-              position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 100,
-              padding: '25px', borderBottomLeftRadius: 0, borderBottomRightRadius: 0,
-              borderBottom: 'none', borderLeft: 'none', borderRight: 'none',
-              borderTop: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 -10px 40px rgba(0,0,0,0.5)'
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.85 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            style={{
+              position: 'absolute', top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 100, width: isMobile ? '88vw' : '320px',
+              background: 'rgba(15,23,42,0.97)', backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.12)', borderRadius: '20px',
+              padding: '20px', boxShadow: '0 20px 60px rgba(0,0,0,0.7)'
             }}
           >
-            <div style={{ width: '40px', height: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '2px', margin: '0 auto 20px auto' }} />
-            
-            <button onClick={() => setSelectedProduct(null)} style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(255,255,255,0.1)', border: 'none', width: '30px', height: '30px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}>
-              <X size={16} />
+            <button onClick={() => { setSelectedProduct(null); setClickedProductId(null); }} style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(255,255,255,0.08)', border: 'none', width: '28px', height: '28px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}>
+              <X size={14} />
             </button>
-            
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '15px', marginBottom: '20px' }}>
-              <div style={{ background: 'rgba(79, 70, 229, 0.2)', padding: '15px', borderRadius: '14px' }}>
-                <Package size={28} color="#818cf8" />
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+              <div style={{ background: 'rgba(79,70,229,0.2)', padding: '10px', borderRadius: '12px', flexShrink: 0 }}>
+                <Package size={22} color="#818cf8" />
               </div>
               <div>
-                <h2 style={{ color: 'white', fontSize: '20px', margin: '0 0 4px 0', lineHeight: 1.2 }}>{selectedProduct.productName}</h2>
-                <span style={{ color: '#10b981', fontWeight: '600', fontSize: '18px' }}>${selectedProduct.price}</span>
+                <div style={{ color: 'white', fontWeight: '700', fontSize: '15px', lineHeight: 1.2 }}>{selectedProduct.productName}</div>
+                <div style={{ color: '#10b981', fontWeight: '600', fontSize: '16px' }}>₹{selectedProduct.price}</div>
               </div>
             </div>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '13px' }}>
-              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '10px' }}>
-                <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Category</div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '12px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '10px' }}>
+                <div style={{ color: '#64748b', marginBottom: '3px' }}>Category</div>
                 <div style={{ color: 'white', fontWeight: '500' }}>{selectedProduct.category}</div>
               </div>
-              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '12px', borderRadius: '10px' }}>
-                <div style={{ color: '#94a3b8', marginBottom: '4px' }}>Stock Available</div>
+              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '10px' }}>
+                <div style={{ color: '#64748b', marginBottom: '3px' }}>Stock</div>
                 <div style={{ color: selectedProduct.quantity < 5 ? '#ef4444' : 'white', fontWeight: '600' }}>{selectedProduct.quantity} units</div>
               </div>
-              <div style={{ background: 'rgba(79, 70, 229, 0.15)', padding: '12px', borderRadius: '10px', gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(79, 70, 229, 0.3)' }}>
-                <MapPin size={20} color="#818cf8" />
+              <div style={{ background: 'rgba(79,70,229,0.1)', padding: '10px', borderRadius: '10px', gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: '8px', border: '1px solid rgba(79,70,229,0.2)' }}>
+                <MapPin size={14} color="#818cf8" />
                 <div>
-                  <div style={{ color: '#a5b4fc', fontSize: '12px', marginBottom: '2px' }}>Exact Location</div>
+                  <div style={{ color: '#a5b4fc', fontSize: '11px' }}>Location</div>
                   <div style={{ color: 'white', fontWeight: '600' }}>{selectedProduct.rackId?.rackName} • Shelf {selectedProduct.shelfNumber}</div>
                 </div>
               </div>
-              
-              {selectedProduct.brand && (
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#94a3b8' }}>Brand:</span><span style={{ color: 'white' }}>{selectedProduct.brand}</span>
-                </div>
-              )}
-               {selectedProduct.size && (
-                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: '#94a3b8' }}>Size:</span><span style={{ color: 'white' }}>{selectedProduct.size}</span>
-                </div>
-              )}
+              {selectedProduct.brand && <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '10px' }}><div style={{ color: '#64748b', marginBottom: '3px' }}>Brand</div><div style={{ color: 'white' }}>{selectedProduct.brand}</div></div>}
+              {selectedProduct.size && <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '10px' }}><div style={{ color: '#64748b', marginBottom: '3px' }}>Size</div><div style={{ color: 'white' }}>{selectedProduct.size}</div></div>}
             </div>
           </motion.div>
         )}
