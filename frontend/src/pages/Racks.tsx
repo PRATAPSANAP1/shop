@@ -82,7 +82,7 @@ const Racks = () => {
   const statusColor = (s: string) => s === 'lowStock' ? '#ef4444' : s === 'expiring' ? '#fbbf24' : '#10b981';
 
   return (
-    <div style={{ padding: isMobile ? '15px' : '30px', width: '100%', margin: '0' }}>
+    <div style={{ padding: isMobile ? '15px' : '30px', width: '100%', margin: '0', height: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box', overflow: 'hidden' }}>
       <style>{`
         .rack-input:focus { border-color: rgba(99,102,241,0.6) !important; box-shadow: 0 0 0 3px rgba(99,102,241,0.12) !important; }
       `}</style>
@@ -173,7 +173,9 @@ const Racks = () => {
         )}
       </AnimatePresence>
 
-      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', paddingRight: '4px' }}
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
         {loading ? (
           [...Array(3)].map((_, i) => (
             <div key={i} className="glass-panel" style={{ padding: '20px' }}>
@@ -246,6 +248,7 @@ const Racks = () => {
             <p style={{ fontSize: '16px' }}>No racks yet. Add your first rack above.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
