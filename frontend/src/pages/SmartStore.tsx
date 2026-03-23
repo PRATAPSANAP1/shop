@@ -115,13 +115,13 @@ const SmartStore: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h1 className="gradient-text" style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '800', margin: 0 }}>SmartStore AI Analytics</h1>
-          <p style={{ color: '#94a3b8', fontSize: isMobile ? '12px' : '14px', marginTop: '6px' }}>AI-Powered Customer Insights & Layout Optimization</p>
+          <p style={{ color: '#94a3b8', fontSize: isMobile ? '12px' : '14px', marginTop: '6px' }}>Real-time insights from your shop data</p>
         </div>
         <button
           onClick={() => setRefreshKey(k => k + 1)}
           style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '12px', color: '#818cf8', cursor: 'pointer', fontWeight: '600', fontSize: '14px' }}
         >
-          <RefreshCw size={16} /> Refresh Dataset
+          Refresh
         </button>
       </div>
 
@@ -129,10 +129,10 @@ const SmartStore: React.FC = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(${isMobile ? '150px' : '220px'}, 1fr))`, gap: '16px' }}>
           <StatCard label="Total Visitors Today" value={totalVisitors} icon={Users} color="#6366f1" sub="+12% vs yesterday" />
-          <StatCard label="Avg Dwell Time" value={`${avgDwell}s`} icon={Clock} color="#ec4899" sub="per zone visit" />
+          <StatCard label="Avg Products/Rack" value={`${avgDwell}s`} icon={Clock} color="#ec4899" sub="dwell proxy" />
           <StatCard label="Busiest Zone" value={busiestZone} icon={TrendingUp} color="#f59e0b" sub={ZONE_TRAFFIC[0] ? `${ZONE_TRAFFIC[0].visitors} visitors` : ''} />
           <StatCard label="Coldest Zone" value={coldZone} icon={Map} color="#06b6d4" sub="needs attention" />
-          <StatCard label="Total Sales Events" value={RACK_PERFORMANCE.reduce((s: number, r: any) => s + r.sales, 0)} icon={ShoppingCart} color="#22c55e" sub="across all racks" />
+          <StatCard label="Total Revenue (₹)" value={`₹${RACK_PERFORMANCE.reduce((s: number, r: any) => s + r.sales, 0).toLocaleString('en-IN')}`} icon={ShoppingCart} color="#22c55e" sub="from QR scans" />
           <StatCard label="Low Stock Alerts" value={RACK_PERFORMANCE.reduce((s: number, r: any) => s + r.lowStockAlerts, 0)} icon={AlertTriangle} color="#f43f5e" sub="action required" />
         </div>
 
@@ -215,7 +215,7 @@ const SmartStore: React.FC = () => {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
           <div className="glass-panel" style={{ padding: isMobile ? '15px' : '22px' }}>
-            <SectionTitle icon={BarChartIcon} color="#8b5cf6" title="Rack Performance (Sales vs Restocks)" />
+            <SectionTitle icon={BarChartIcon} color="#8b5cf6" title="Rack Performance (Revenue vs Total Qty)" />
             <div style={{ height: '260px' }}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={RACK_PERFORMANCE} margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
@@ -223,8 +223,8 @@ const SmartStore: React.FC = () => {
                   <XAxis dataKey="rack" stroke="#64748b" tick={{ fontSize: 11 }} />
                   <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
                   <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: 'white' }} />
-                  <Bar dataKey="sales" fill="#6366f1" radius={[4, 4, 0, 0]} name="Sales" />
-                  <Bar dataKey="restocks" fill="#22c55e" radius={[4, 4, 0, 0]} name="Restocks" />
+                  <Bar dataKey="sales" fill="#6366f1" radius={[4, 4, 0, 0]} name="Revenue (₹)" />
+                  <Bar dataKey="restocks" fill="#22c55e" radius={[4, 4, 0, 0]} name="Total Qty" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -315,7 +315,7 @@ const SmartStore: React.FC = () => {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                  {['Rack', 'Total Sales', 'Restocks', 'Low Stock Alerts', 'Status'].map(h => (
+                  {['Rack', 'Revenue (₹)', 'Total Qty', 'Low Stock Alerts', 'Status'].map(h => (
                     <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#64748b', fontWeight: '600', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
                   ))}
                 </tr>
@@ -330,7 +330,7 @@ const SmartStore: React.FC = () => {
                       <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', background: COLORS[i % COLORS.length], marginRight: 8 }} />
                       {r.rack}
                     </td>
-                    <td style={{ padding: '12px 16px', color: '#22c55e', fontWeight: '700' }}>{r.sales}</td>
+                    <td style={{ padding: '12px 16px', color: '#22c55e', fontWeight: '700' }}>₹{r.sales.toLocaleString('en-IN')}</td>
                     <td style={{ padding: '12px 16px', color: '#94a3b8' }}>{r.restocks}</td>
                     <td style={{ padding: '12px 16px' }}>
                       <span style={{ color: r.lowStockAlerts > 2 ? '#ef4444' : r.lowStockAlerts > 0 ? '#f59e0b' : '#22c55e', fontWeight: '700' }}>
