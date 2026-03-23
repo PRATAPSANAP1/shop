@@ -71,7 +71,7 @@ const ShopBuilder = () => {
   const [racks, setRacks] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingRack, setEditingRack] = useState(null);
-  const [formData, setFormData] = useState({ rackName: '', positionX: 0, positionY: 0, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' });
+  const [formData, setFormData] = useState({ rackName: '', positionX: 0, positionY: 1, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' });
   const [shopDimensions, setShopDimensions] = useState({ width: 20, depth: 20 });
   const [rackProducts, setRackProducts] = useState({});
   const [doors, setDoors] = useState([]);
@@ -106,7 +106,7 @@ const ShopBuilder = () => {
     try {
       if (editingRack) { await updateRack(editingRack._id, formData); } else { await createRack(formData); }
       setShowForm(false); setEditingRack(null);
-      setFormData({ rackName: '', positionX: 0, positionY: 0, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' });
+      setFormData({ rackName: '', positionX: 0, positionY: 1, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' });
       loadRacks();
     } catch (err: any) { alert(err.response?.data?.error || 'Error'); }
   };
@@ -228,7 +228,7 @@ const ShopBuilder = () => {
           ))}
         </div>
 
-        <button onClick={() => { setShowForm(!showForm); setEditingRack(null); setFormData({ rackName: '', positionX: 0, positionY: 0, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' }); }} style={{ width: '100%', padding: '10px', background: 'linear-gradient(135deg, #4f46e5, #3b82f6)', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', marginBottom: '12px', fontWeight: '600', fontSize: '13px' }}>
+        <button onClick={() => { setShowForm(!showForm); setEditingRack(null); setFormData({ rackName: '', positionX: 0, positionY: 1, positionZ: 0, rotation: 0, width: 2, height: 3, shelves: 4, columns: 3, color: '#4CAF50' }); }} style={{ width: '100%', padding: '10px', background: 'linear-gradient(135deg, #4f46e5, #3b82f6)', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', marginBottom: '12px', fontWeight: '600', fontSize: '13px' }}>
           {showForm ? 'Cancel' : '+ Add Rack'}
         </button>
 
