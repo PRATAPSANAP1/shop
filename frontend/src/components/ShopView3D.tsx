@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Box, Text, Plane, Environment, ContactShadows } from '@react-three/drei';
+import { OrbitControls, Box, Text, Plane, Environment, ContactShadows, Billboard } from '@react-three/drei';
 import { getRacks, getProductsByRack, getShopConfig, getDoors } from '../services/api';
 
 const ProductBox = ({ product, position, size }: any) => {
@@ -29,7 +29,7 @@ const ProductBox = ({ product, position, size }: any) => {
   );
 };
 
-const Rack3D = ({ rack, products, onClick }: any) => {
+const Rack3D = ({ rack, products, onClick, highlighted }: any) => {
   const getColor = () => {
     if (rack.status === 'lowStock') return '#ff4444';
     if (rack.status === 'expiring') return '#ffaa00';
@@ -56,13 +56,15 @@ const Rack3D = ({ rack, products, onClick }: any) => {
     >
       <Box args={dimensions} onClick={() => onClick(rack)} castShadow receiveShadow>
         <meshPhysicalMaterial 
-          color={getColor()} 
+          color={highlighted ? '#22c55e' : getColor()} 
           transparent 
-          opacity={hovered ? 0.8 : 0.4} 
-          roughness={hovered ? 0.05 : 0.2} 
-          metalness={0.1}
-          transmission={0.5}
+          opacity={highlighted ? 0.85 : hovered ? 0.8 : 0.4} 
+          roughness={highlighted ? 0.0 : hovered ? 0.05 : 0.2} 
+          metalness={highlighted ? 0.4 : 0.1}
+          transmission={highlighted ? 0.1 : 0.5}
           thickness={0.5}
+          emissive={highlighted ? '#22c55e' : '#000000'}
+          emissiveIntensity={highlighted ? 0.6 : 0}
         />
       </Box>
       
@@ -102,22 +104,14 @@ const Rack3D = ({ rack, products, onClick }: any) => {
         );
       })}
       
-      <Text 
-        position={[0, height/2 + 0.3, 0]} 
-        fontSize={0.4} 
-        color="black"
-        fontWeight="bold"
-      >
-        {rack.rackName}
-      </Text>
-      
-      <Text 
-        position={[0, -height/2 - 0.3, 0]} 
-        fontSize={0.2} 
-        color="#666"
-      >
-        {width}m × {height}m
-      </Text>
+      <Billboard position={[0, height/2 + 0.55, 0]}>
+        <Box args={[width * 0.9, 0.55, 0.01]}>
+          <meshStandardMaterial color={highlighted ? '#22c55e' : rack.color || '#6366f1'} opacity={0.92} transparent />
+        </Box>
+        <Text position={[0, 0, 0.02]} fontSize={0.28} color="white" fontWeight="bold" anchorX="center" anchorY="middle" maxWidth={width * 0.85}>
+          {rack.rackName}
+        </Text>
+      </Billboard>
     </group>
   );
 };
@@ -129,6 +123,11 @@ const ShopView3D = () => {
   const [shopDimensions, setShopDimensions] = useState({ width: 30, depth: 30 });
   const [doors, setDoors] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [highlightedRackId, setHighlightedRackId] = useState(null);
+  const [highlightedProductId, setHighlightedProductId] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -181,6 +180,35 @@ const ShopView3D = () => {
 
   const handleRackClick = (rack: any) => {
     setSelectedRack(rack);
+    setHighlightedRackId(null);
+    setHighlightedProductId(null);
+  };
+
+  const allProducts = Object.values(rackProducts).flat() as any[];
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (!query.trim()) { setSearchResults([]); setShowDropdown(false); return; }
+    const q = query.toLowerCase();
+    const results = allProducts.filter((p: any) =>
+      p.productName?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.brand?.toLowerCase().includes(q)
+    ).slice(0, 8);
+    setSearchResults(results);
+    setShowDropdown(true);
+  };
+
+  const handleSelectProduct = (product: any) => {
+    const rack = racks.find((r: any) => r._id === product.rackId);
+    if (rack) {
+      setSelectedRack(rack);
+      setHighlightedRackId(rack._id);
+      setHighlightedProductId(product._id);
+      setTimeout(() => setHighlightedRackId(null), 8000);
+    }
+    setSearchQuery(product.productName);
+    setShowDropdown(false);
   };
 
   return (
@@ -227,17 +255,60 @@ const ShopView3D = () => {
               key={rack._id} 
               rack={rack} 
               products={rackProducts[rack._id] || []} 
-              onClick={handleRackClick} 
+              onClick={handleRackClick}
+              highlighted={highlightedRackId === rack._id}
             />
           ))}
           
           <OrbitControls />
         </Canvas>
         
-        {/* Controls info */}
         <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', padding: isMobile ? '8px 12px' : '14px 18px', borderRadius: '12px' }}>
           <h3 style={{ margin: 0, color: 'white', fontSize: isMobile ? '13px' : '15px' }}>3D Shop View</h3>
           {!isMobile && <p style={{ margin: '6px 0 0 0', color: '#94a3b8', fontSize: '12px' }}>Click rack • Drag to rotate • Scroll to zoom</p>}
+        </div>
+
+        {/* Search bar */}
+        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '70vw' : '360px', zIndex: 10 }}>
+          <div style={{ position: 'relative' }}>
+            <input
+              value={searchQuery}
+              onChange={e => handleSearch(e.target.value)}
+              onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
+              placeholder="🔍 Search products..."
+              style={{ width: '100%', padding: '10px 16px', borderRadius: '12px', border: '1px solid rgba(99,102,241,0.4)', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(12px)', color: 'white', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }}
+            />
+            {searchQuery && (
+              <button onClick={() => { setSearchQuery(''); setSearchResults([]); setShowDropdown(false); setHighlightedRackId(null); setHighlightedProductId(null); }}
+                style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '16px' }}>✕</button>
+            )}
+          </div>
+          {showDropdown && searchResults.length > 0 && (
+            <div style={{ marginTop: '4px', background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '12px', overflow: 'hidden', backdropFilter: 'blur(12px)' }}>
+              {searchResults.map((p: any) => {
+                const rack = racks.find((r: any) => r._id === p.rackId);
+                return (
+                  <div key={p._id} onClick={() => handleSelectProduct(p)}
+                    style={{ padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(99,102,241,0.15)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    <div>
+                      <div style={{ color: 'white', fontSize: '13px', fontWeight: '600' }}>{p.productName}</div>
+                      <div style={{ color: '#64748b', fontSize: '11px' }}>{p.category} {rack ? `• ${rack.rackName}` : ''}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ color: '#22c55e', fontSize: '12px', fontWeight: '700' }}>₹{p.price}</div>
+                      <div style={{ color: p.quantity < (p.minStockLevel || 10) ? '#ef4444' : '#94a3b8', fontSize: '11px' }}>Qty: {p.quantity}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {showDropdown && searchResults.length === 0 && searchQuery.trim() && (
+            <div style={{ marginTop: '4px', background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '14px', color: '#64748b', fontSize: '13px', textAlign: 'center', backdropFilter: 'blur(12px)' }}>No products found</div>
+          )}
         </div>
       </div>
       
@@ -257,8 +328,10 @@ const ShopView3D = () => {
           {(rackProducts[selectedRack._id as keyof typeof rackProducts] || []).map((product: any, index: number) => {
             const shelfIndex = Math.floor(index / (selectedRack.columns || 3)) + 1;
             const columnIndex = (index % (selectedRack.columns || 3)) + 1;
+            const isHighlighted = highlightedProductId === product._id;
             return (
-              <div key={product._id} style={{ background: 'rgba(30,41,59,0.8)', padding: '12px', margin: '8px 0', borderRadius: '10px', borderLeft: `4px solid ${product.quantity < 5 ? '#ef4444' : '#10b981'}` }}>
+              <div key={product._id} style={{ background: isHighlighted ? 'rgba(34,197,94,0.12)' : 'rgba(30,41,59,0.8)', padding: '12px', margin: '8px 0', borderRadius: '10px', borderLeft: `4px solid ${isHighlighted ? '#22c55e' : product.quantity < 5 ? '#ef4444' : '#10b981'}`, boxShadow: isHighlighted ? '0 0 12px rgba(34,197,94,0.3)' : 'none', transition: 'all 0.3s' }}>
+                {isHighlighted && <div style={{ fontSize: '11px', color: '#22c55e', fontWeight: '700', marginBottom: '4px', letterSpacing: '0.5px' }}>✓ FOUND</div>}
                 <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '6px', color: 'white' }}>{product.productName}</div>
                 <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '6px' }}>Shelf {shelfIndex}, Column {columnIndex}</div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', fontSize: '13px', color: '#cbd5e1' }}>
