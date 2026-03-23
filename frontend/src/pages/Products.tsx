@@ -336,6 +336,9 @@ const Products = () => {
                     <F label="Shelf Number" isMobile={isMobile}>
                       <input type="number" placeholder="1" value={formData.shelfNumber} onChange={(e) => setFormData({ ...formData, shelfNumber: parseInt(e.target.value) })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
+                    <F label="Column Number" isMobile={isMobile}>
+                      <input type="number" placeholder="1" value={formData.columnNumber} onChange={(e) => setFormData({ ...formData, columnNumber: parseInt(e.target.value) })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
+                    </F>
                     <F label="Expiry Date" isMobile={isMobile}>
                       <input type="date" value={formData.expiryDate} onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
