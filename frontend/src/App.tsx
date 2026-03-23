@@ -284,7 +284,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const setLastActive = () => localStorage.setItem(KEY, String(Date.now()));
 
-    const heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
+    const heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 2 * 60 * 1000);
     const checkInterval = setInterval(() => {
       const last = Number(localStorage.getItem(KEY) || 0);
       if (last && Date.now() - last > TIMEOUT) doLogout();

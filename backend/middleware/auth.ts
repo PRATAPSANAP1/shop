@@ -13,7 +13,7 @@ const COOKIE_OPTS = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
-const FIVE_MIN = 5 * 60 * 1000;
+const FIVE_MIN = 6 * 60 * 1000; // 6 min buffer
 
 const authFactory = (optional = false) => async (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = req.cookies?.shop_token;
@@ -41,9 +41,13 @@ const authFactory = (optional = false) => async (req: AuthRequest, res: Response
       return res.status(401).json({ error: 'Session expired due to inactivity' });
     }
 
-    // Refresh expiry on every request (activity)
-    user.tokenExpiry = new Date(Date.now() + FIVE_MIN);
-    await user.save();
+    // Only refresh if less than 2 min remaining (reduce DB writes)
+    const now = Date.now();
+    const expiry = user.tokenExpiry?.getTime() || 0;
+    if (expiry - now < 2 * 60 * 1000) {
+      user.tokenExpiry = new Date(now + FIVE_MIN);
+      await user.save();
+    }
 
     req.userId = String(user._id);
     next();
