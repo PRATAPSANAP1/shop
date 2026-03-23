@@ -173,7 +173,7 @@ const Racks = () => {
         )}
       </AnimatePresence>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(340px, 1fr))', gap: '16px' }}>
         {loading ? (
           [...Array(3)].map((_, i) => (
             <div key={i} className="glass-panel" style={{ padding: '20px' }}>
