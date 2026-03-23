@@ -7,6 +7,7 @@ export interface IUser extends Document {
   shopName: string;
   mobile: string;
   token?: string;
+  tokenExpiry?: Date;
   createdAt: Date;
 }
 
@@ -17,6 +18,7 @@ const userSchema: Schema = new Schema({
   shopName: { type: String, required: true },
   mobile: { type: String, default: '' },
   token: { type: String, default: null },
+  tokenExpiry: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now }
 });
 

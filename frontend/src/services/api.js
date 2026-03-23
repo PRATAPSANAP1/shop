@@ -21,6 +21,7 @@ export const login = (data) => API.post('/auth/login', data);
 export const register = (data) => API.post('/auth/register', data);
 export const logout = () => API.post('/auth/logout');
 export const getMe = () => API.get('/auth/me');
+export const heartbeat = () => API.put('/auth/heartbeat');
 export const getRacks = () => API.get('/racks');
 export const createRack = (data) => API.post('/racks', data);
 export const updateRack = (id, data) => API.put(`/racks/${id}`, data);

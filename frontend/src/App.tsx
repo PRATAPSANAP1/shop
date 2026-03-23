@@ -72,7 +72,7 @@ import Notifications from './pages/Notifications';
 import Scanner from './pages/Scanner';
 import Profile from './pages/Profile';
 import SmartStore from './pages/SmartStore';
-import { getMe, logout } from './services/api';
+import { getMe, logout, heartbeat } from './services/api';
 
 const SidebarLink = ({ to, icon: Icon, children, onClick }: { to: string, icon: any, children: React.ReactNode, onClick?: () => void }) => {
   const location = useLocation();
@@ -260,12 +260,60 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+
   useEffect(() => {
     getMe()
       .then(({ data }) => setIsAuth(!!data))
       .catch(() => setIsAuth(false))
       .finally(() => setAuthChecked(true));
   }, []);
+
+  // Heartbeat + inactivity + tab-close logic
+  useEffect(() => {
+    if (!isAuth) return;
+
+    let inactivityTimer: ReturnType<typeof setTimeout>;
+    let heartbeatInterval: ReturnType<typeof setInterval>;
+
+    const doLogout = () => {
+      logout().finally(() => {
+        setIsAuth(false);
+        window.location.href = '/admin/login';
+      });
+    };
+
+    const resetInactivity = () => {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(doLogout, 5 * 60 * 1000);
+    };
+
+    // Send heartbeat every 4 min while active
+    heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
+
+    // Reset timer on any user activity
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+    events.forEach(e => window.addEventListener(e, resetInactivity));
+    resetInactivity();
+
+    // Logout when tab is closed or hidden
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') doLogout();
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    // Logout on tab/window close
+    const handleUnload = () => doLogout();
+    window.addEventListener('beforeunload', handleUnload);
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      clearInterval(heartbeatInterval);
+      events.forEach(e => window.removeEventListener(e, resetInactivity));
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [isAuth]);
+
   return <AuthContext.Provider value={{ isAuth, setIsAuth, authChecked }}>{children}</AuthContext.Provider>;
 };
 

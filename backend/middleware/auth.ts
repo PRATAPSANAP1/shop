@@ -13,6 +13,8 @@ const COOKIE_OPTS = {
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
+const FIVE_MIN = 5 * 60 * 1000;
+
 const authFactory = (optional = false) => async (req: AuthRequest, res: Response, next: NextFunction) => {
   const token = req.cookies?.shop_token;
 
@@ -24,14 +26,21 @@ const authFactory = (optional = false) => async (req: AuthRequest, res: Response
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
     const user = await User.findById(decoded.userId).select('-password');
-    if (!user) {
+    if (!user || user.token !== token) {
       if (optional) return next();
-      return res.status(401).json({ error: 'User not found' });
+      return res.status(401).json({ error: 'Session expired' });
     }
-    const newToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
-    user.token = newToken;
-    await user.save();
-    res.cookie('shop_token', newToken, COOKIE_OPTS);
+
+    // Check inactivity expiry
+    if (user.tokenExpiry && new Date() > user.tokenExpiry) {
+      user.token = null;
+      user.tokenExpiry = null;
+      await user.save();
+      res.clearCookie('shop_token');
+      if (optional) return next();
+      return res.status(401).json({ error: 'Session expired due to inactivity' });
+    }
+
     req.userId = String(user._id);
     next();
   } catch (error) {

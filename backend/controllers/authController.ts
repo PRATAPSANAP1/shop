@@ -11,8 +11,7 @@ const COOKIE_OPTS = {
   sameSite: 'none' as const,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
-
-
+const FIVE_MIN = 5 * 60 * 1000;
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -29,6 +28,7 @@ export const register = async (req: Request, res: Response) => {
     const user = new User({ name, email, password: hashedPassword, shopName, mobile });
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     user.token = token;
+    user.tokenExpiry = new Date(Date.now() + FIVE_MIN);
     await user.save();
 
     res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
@@ -49,6 +49,7 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     user.token = token;
+    user.tokenExpiry = new Date(Date.now() + FIVE_MIN);
     await user.save();
 
     res.cookie(COOKIE_NAME, token, COOKIE_OPTS);
@@ -60,9 +61,18 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: AuthRequest, res: Response) => {
   try {
-    await User.findByIdAndUpdate(req.userId, { token: null });
+    await User.findByIdAndUpdate(req.userId, { token: null, tokenExpiry: null });
     res.clearCookie(COOKIE_NAME);
     res.json({ message: 'Logged out' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const heartbeat = async (req: AuthRequest, res: Response) => {
+  try {
+    await User.findByIdAndUpdate(req.userId, { tokenExpiry: new Date(Date.now() + FIVE_MIN) });
+    res.json({ ok: true });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
