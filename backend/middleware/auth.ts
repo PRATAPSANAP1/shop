@@ -33,8 +33,8 @@ const authFactory = (optional = false) => async (req: AuthRequest, res: Response
 
     // Check inactivity expiry
     if (user.tokenExpiry && new Date() > user.tokenExpiry) {
-      user.token = null;
-      user.tokenExpiry = null;
+      user.token = undefined;
+      user.tokenExpiry = undefined;
       await user.save();
       res.clearCookie('shop_token');
       if (optional) return next();
