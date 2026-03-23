@@ -287,30 +287,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       inactivityTimer = setTimeout(doLogout, 5 * 60 * 1000);
     };
 
-    // Send heartbeat every 4 min while active
     heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
 
-    // Reset timer on any user activity
     const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
     events.forEach(e => window.addEventListener(e, resetInactivity));
     resetInactivity();
-
-    // Logout when tab is closed or hidden
-    const handleVisibility = () => {
-      if (document.visibilityState === 'hidden') doLogout();
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    // Logout on tab/window close
-    const handleUnload = () => doLogout();
-    window.addEventListener('beforeunload', handleUnload);
 
     return () => {
       clearTimeout(inactivityTimer);
       clearInterval(heartbeatInterval);
       events.forEach(e => window.removeEventListener(e, resetInactivity));
-      document.removeEventListener('visibilitychange', handleVisibility);
-      window.removeEventListener('beforeunload', handleUnload);
     };
   }, [isAuth]);
 
