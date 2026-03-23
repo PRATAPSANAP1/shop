@@ -5,7 +5,20 @@ const showToast = (msg: string, type: 'success' | 'error' = 'success') => (windo
 import QRCode from 'qrcode';
 import jsPDF from 'jspdf';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Search, Filter, Edit, Trash2, QrCode, Package, Boxes, AlertCircle, X, DollarSign, Calendar, Layers, ShoppingBag, Award, Tag } from 'lucide-react';
+import { Plus, Search, Filter, Edit, Trash2, QrCode, Package, Boxes, X } from 'lucide-react';
+
+const F = ({ label, children, icon: Icon, isMobile }: any) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <label style={{ color: '#94a3b8', fontSize: '13px', fontWeight: '500' }}>{label}</label>
+    <div style={{ position: 'relative' }}>
+      {!isMobile && Icon && <Icon size={18} color="#4f46e5" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.8 }} />}
+      {React.cloneElement(children, {
+        style: { ...children.props.style, paddingLeft: !isMobile && Icon ? '44px' : '14px' },
+        className: 'profile-input'
+      })}
+    </div>
+  </div>
+);
 
 const Products = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -296,56 +309,40 @@ const Products = () => {
             </div>
 
             <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '16px' }}>
-              {(() => {
-                const F = ({ label, children, icon: Icon }: any) => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-      <label style={{ color: '#94a3b8', fontSize: '13px', fontWeight: '500' }}>{label}</label>
-      <div style={{ position: 'relative' }}>
-        {!isMobile && Icon && <Icon size={18} color="#4f46e5" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.8 }} />}
-        {React.cloneElement(children, { style: { ...children.props.style, paddingLeft: !isMobile && Icon ? '44px' : '14px' }, className: 'profile-input' })}
-      </div>
-    </div>
-  );
-};
-                return (
-                  <>
                     <div style={{ gridColumn: isMobile ? '1' : 'span 2' }}>
-                      <F label="Product Name" icon={Package}>
-                        <input type="text" required placeholder={isMobile ? "e.g. Whole Milk" : "      e.g. Whole Milk"} value={formData.productName} onChange={(e) => setFormData({ ...formData, productName: e.target.value })} style={{ width: '100%', padding: isMobile ? '12px' : '14px 14px 14px 44px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
+                      <F label="Product Name" icon={Package} isMobile={isMobile}>
+                        <input type="text" required placeholder="e.g. Whole Milk" value={formData.productName} onChange={(e) => setFormData({ ...formData, productName: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                       </F>
                     </div>
-                    <F label="Category">
+                    <F label="Category" isMobile={isMobile}>
                       <input type="text" required placeholder="e.g. Dairy" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Price ($)">
+                    <F label="Price (₹)" isMobile={isMobile}>
                       <input type="number" step="0.01" required placeholder="0.00" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Quantity">
+                    <F label="Quantity" isMobile={isMobile}>
                       <input type="number" required placeholder="0" value={formData.quantity} onChange={(e) => setFormData({ ...formData, quantity: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Min Stock Level">
+                    <F label="Min Stock Level" isMobile={isMobile}>
                       <input type="number" required placeholder="10" value={formData.minStockLevel} onChange={(e) => setFormData({ ...formData, minStockLevel: parseInt(e.target.value) })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
                     <div>
                       <label style={{ display: 'block', color: '#94a3b8', marginBottom: '6px', fontSize: '13px' }}>Rack Placement</label>
-                      <div style={{ position: 'relative' }}>
-                        <select required value={formData.rackId} onChange={(e) => setFormData({ ...formData, rackId: e.target.value })} className="profile-input" style={{ width: '100%', padding: '12px', paddingLeft: '14px', background: 'rgba(30,41,59,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }}>
-                          <option value="">Select a Rack</option>
-                          {racks.map(rack => <option key={rack._id} value={rack._id}>{rack.rackName}</option>)}
-                        </select>
-                      </div>
+                      <select required value={formData.rackId} onChange={(e) => setFormData({ ...formData, rackId: e.target.value })} className="profile-input" style={{ width: '100%', padding: '12px', background: 'rgba(30,41,59,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }}>
+                        <option value="">Select a Rack</option>
+                        {racks.map(rack => <option key={rack._id} value={rack._id}>{rack.rackName}</option>)}
+                      </select>
                     </div>
-                    <F label="Shelf Number">
+                    <F label="Shelf Number" isMobile={isMobile}>
                       <input type="number" placeholder="1" value={formData.shelfNumber} onChange={(e) => setFormData({ ...formData, shelfNumber: parseInt(e.target.value) })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Expiry Date">
+                    <F label="Expiry Date" isMobile={isMobile}>
                       <input type="date" value={formData.expiryDate} onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Brand">
+                    <F label="Brand" isMobile={isMobile}>
                       <input type="text" placeholder="e.g. Amul" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Size">
+                    <F label="Size" isMobile={isMobile}>
                       <input type="text" placeholder="e.g. 500ml" value={formData.size} onChange={(e) => setFormData({ ...formData, size: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
                     <div style={{ gridColumn: isMobile ? '1' : 'span 2', marginTop: '8px', display: 'flex', gap: '12px' }}>
@@ -354,9 +351,6 @@ const Products = () => {
                       </button>
                       <button type="button" onClick={() => setShowForm(false)} style={{ padding: '14px 24px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', cursor: 'pointer' }}>Cancel</button>
                     </div>
-                  </>
-                );
-              })()}
             </form>
           </motion.div>
         </div>
