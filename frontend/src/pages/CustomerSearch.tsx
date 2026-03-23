@@ -52,7 +52,7 @@ interface Product {
 }
 
 // Glowing product box
-const GlowBox = ({ args, color, glow }: any) => {
+const GlowBox = ({ args, color, glow, dimmed }: any) => {
   const ref = useRef<any>();
   useFrame(({ clock }) => {
     if (ref.current && glow) {
@@ -61,7 +61,7 @@ const GlowBox = ({ args, color, glow }: any) => {
   });
   return (
     <Box args={args} castShadow>
-      <meshStandardMaterial ref={ref} color={glow ? '#22c55e' : color} emissive={glow ? '#22c55e' : color} emissiveIntensity={glow ? 1.5 : 0.2} />
+      <meshStandardMaterial ref={ref} color={glow ? '#22c55e' : dimmed ? '#1e293b' : color} emissive={glow ? '#22c55e' : color} emissiveIntensity={glow ? 1.5 : dimmed ? 0 : 0.2} transparent opacity={dimmed ? 0.15 : 1} />
     </Box>
   );
 };
@@ -93,7 +93,7 @@ const BouncingArrow = ({ height, rackName }: any) => {
   );
 };
 
-const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, setSelectedProduct }: any) => {
+const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, setSelectedProduct, searchActive }: any) => {
   const width = rack.width || 2;
   const height = rack.height || 3;
   const depth = 0.3;
@@ -106,14 +106,14 @@ const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, 
   return (
     <group position={[rack.positionX, rack.positionY || 0, rack.positionZ]} rotation={[0, (rack.rotation || 0) * Math.PI / 180, 0]}>
       <Box args={[width, height, depth]} castShadow>
-        <meshStandardMaterial color="#f1f5f9" transparent opacity={0.08} depthWrite={false} />
+        <meshStandardMaterial color="#f1f5f9" transparent opacity={searchActive && !isHighlighted ? 0.04 : 0.08} depthWrite={false} />
       </Box>
 
       <group position={[0, height / 2 + 0.3, 0.16]}>
         <Box args={[width * 0.9, 0.4, 0.05]}>
-          <meshStandardMaterial color={rack.color || '#4f46e5'} emissive={rack.color || '#4f46e5'} emissiveIntensity={0.3} />
+          <meshStandardMaterial color={searchActive && !isHighlighted ? '#334155' : rack.color || '#4f46e5'} emissive={searchActive && !isHighlighted ? '#000' : rack.color || '#4f46e5'} emissiveIntensity={searchActive && !isHighlighted ? 0 : 0.3} />
         </Box>
-        <Text position={[0, 0, 0.03]} fontSize={0.2} color="white" fontWeight="900" anchorX="center" anchorY="middle">
+        <Text position={[0, 0, 0.03]} fontSize={0.2} color={searchActive && !isHighlighted ? '#475569' : 'white'} fontWeight="900" anchorX="center" anchorY="middle">
           {rack.rackName.toUpperCase()}
         </Text>
       </group>
@@ -143,7 +143,7 @@ const SupermarketRack = ({ rack, products, isHighlighted, highlightedProductId, 
 
         return (
           <group key={product._id} position={[productX, productY, 0.15]} onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}>
-            <GlowBox args={productSize} color={productColor} glow={isProductHighlighted} />
+            <GlowBox args={productSize} color={productColor} glow={isProductHighlighted} dimmed={searchActive && !isProductHighlighted} />
             <Text position={[0, productSize[1]/2 + 0.08, 0.12]} fontSize={0.12} color="white" fontWeight="bold" anchorX="center" anchorY="bottom" maxWidth={productSize[0]}>
               {product.productName}
             </Text>
@@ -547,7 +547,8 @@ const CustomerSearch: React.FC = () => {
               products={rackProducts[rack._id] || []} 
               isHighlighted={showArrow && foundProduct && foundProduct.rackId?._id === rack._id} 
               highlightedProductId={foundProduct?._id} 
-              setSelectedProduct={setSelectedProduct} 
+              setSelectedProduct={setSelectedProduct}
+              searchActive={showArrow}
             />
           ))}
 
