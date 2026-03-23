@@ -342,10 +342,10 @@ const Products = () => {
                     <F label="Expiry Date" isMobile={isMobile}>
                       <input type="date" value={formData.expiryDate} onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Brand" isMobile={isMobile}>
+                    <F label="Brand (optional)" isMobile={isMobile}>
                       <input type="text" placeholder="e.g. Amul" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
-                    <F label="Size" isMobile={isMobile}>
+                    <F label="Size (optional)" isMobile={isMobile}>
                       <input type="text" placeholder="e.g. 500ml" value={formData.size} onChange={(e) => setFormData({ ...formData, size: e.target.value })} style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', color: 'white' }} />
                     </F>
                     <div style={{ gridColumn: isMobile ? '1' : 'span 2', marginTop: '8px', display: 'flex', gap: '12px' }}>
