@@ -268,7 +268,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setAuthChecked(true));
   }, []);
 
-  // Heartbeat + inactivity logout (cross-tab via localStorage)
+  // Heartbeat + inactivity logout (5 min, tab-switch safe)
   useEffect(() => {
     if (!isAuth) return;
 
@@ -287,17 +287,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const heartbeatInterval = setInterval(() => heartbeat().catch(() => {}), 4 * 60 * 1000);
     const checkInterval = setInterval(() => {
       const last = Number(localStorage.getItem(KEY) || 0);
-      if (Date.now() - last > TIMEOUT) doLogout();
+      if (last && Date.now() - last > TIMEOUT) doLogout();
     }, 1000);
 
     const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
     events.forEach(e => window.addEventListener(e, setLastActive));
+
+    const onFocus = () => setLastActive();
+    window.addEventListener('focus', onFocus);
     setLastActive();
 
     return () => {
       clearInterval(heartbeatInterval);
       clearInterval(checkInterval);
       events.forEach(e => window.removeEventListener(e, setLastActive));
+      window.removeEventListener('focus', onFocus);
     };
   }, [isAuth]);
 
