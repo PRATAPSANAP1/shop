@@ -497,17 +497,30 @@ const CustomerSearch: React.FC = () => {
           <ambientLight intensity={0.4} />
           <directionalLight position={[15, 20, 10]} intensity={0.8} castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} />
           
+          {/* Floor */}
           <Plane args={[shopConfig.width, shopConfig.depth]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
             <meshStandardMaterial color="#1e293b" metalness={0.2} roughness={0.8} />
           </Plane>
 
           <gridHelper args={[Math.max(shopConfig.width, shopConfig.depth), 20, '#334155', '#1e293b']} position={[0, 0.01, 0]} />
 
-          {[[0, 1.5, -shopConfig.depth/2, shopConfig.width, 3, 0.2], [0, 1.5, shopConfig.depth/2, shopConfig.width, 3, 0.2], [-shopConfig.width/2, 1.5, 0, 0.2, 3, shopConfig.depth], [shopConfig.width/2, 1.5, 0, 0.2, 3, shopConfig.depth]].map((args, i) => (
-            <Box key={i} args={[args[3], args[4], args[5]] as [number, number, number]} position={[args[0] as number, args[1] as number, args[2] as number]}>
-              <meshStandardMaterial color="#334155" transparent opacity={0.15} depthWrite={false} />
-            </Box>
-          ))}
+          {/* Walls — sized exactly to shopConfig dimensions */}
+          {/* Back wall */}
+          <Box args={[shopConfig.width, 4, 0.3]} position={[0, 2, -shopConfig.depth / 2]}>
+            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+          </Box>
+          {/* Front wall */}
+          <Box args={[shopConfig.width, 4, 0.3]} position={[0, 2, shopConfig.depth / 2]}>
+            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+          </Box>
+          {/* Left wall */}
+          <Box args={[0.3, 4, shopConfig.depth]} position={[-shopConfig.width / 2, 2, 0]}>
+            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+          </Box>
+          {/* Right wall */}
+          <Box args={[0.3, 4, shopConfig.depth]} position={[shopConfig.width / 2, 2, 0]}>
+            <meshStandardMaterial color="#475569" transparent opacity={0.6} />
+          </Box>
 
           {doors.map((door) => (
             <group key={door._id} position={[door.positionX, (door.height || 2.5) / 2, door.positionZ]} rotation={[0, (door.rotation || 0) * Math.PI / 180, 0]}>
