@@ -268,14 +268,16 @@ const ShopView3D = () => {
           <OrbitControls maxPolarAngle={Math.PI / 2.1} minDistance={5} maxDistance={60} enableDamping dampingFactor={0.05} />
         </Canvas>
 
-        {/* Top-left info */}
-        <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', padding: isMobile ? '8px 12px' : '12px 16px', borderRadius: '12px' }}>
-          <h3 style={{ margin: 0, color: 'white', fontSize: isMobile ? '13px' : '14px' }}>3D Shop View</h3>
-          {!isMobile && <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '11px' }}>Click rack • Drag to rotate • Scroll to zoom</p>}
-        </div>
+        {/* Top-left info — hidden on mobile (header already shows title) */}
+        {!isMobile && (
+          <div style={{ position: 'absolute', top: '12px', left: '12px', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.08)', padding: '12px 16px', borderRadius: '12px' }}>
+            <h3 style={{ margin: 0, color: 'white', fontSize: '14px' }}>3D Shop View</h3>
+            <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '11px' }}>Click rack • Drag to rotate • Scroll to zoom</p>
+          </div>
+        )}
 
         {/* Search bar */}
-        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? '70vw' : '360px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: isMobile ? '58px' : '12px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? 'calc(100% - 24px)' : '360px', zIndex: 10 }}>
           <div style={{ position: 'relative' }}>
             <input
               value={searchQuery}
@@ -318,7 +320,7 @@ const ShopView3D = () => {
 
         {/* Found banner */}
         {searchActive && (
-          <div style={{ position: 'absolute', top: '70px', left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: 'white', padding: '10px 20px', borderRadius: '30px', zIndex: 10, fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 15px rgba(16,185,129,0.4)', whiteSpace: 'nowrap' }}>
+          <div style={{ position: 'absolute', top: isMobile ? '116px' : '70px', left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: 'white', padding: '10px 20px', borderRadius: '30px', zIndex: 10, fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 15px rgba(16,185,129,0.4)', whiteSpace: 'nowrap' }}>
             📍 Found in {racks.find((r: any) => r._id === highlightedRackId)?.rackName}
           </div>
         )}
