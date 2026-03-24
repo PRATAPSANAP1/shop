@@ -168,7 +168,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <motion.nav
             initial={{ x: -300 }} animate={{ x: 0 }}
             className="glass-panel"
-            style={{ width: '260px', minWidth: '23px', margin: '15px', padding: '25px 20px', display: 'flex', flexDirection: 'column', zIndex: 40, overflow: 'hidden' }}
+            style={{ width: '230px', minWidth: '230px', marginTop: '30px', padding: '25px 20px', display: 'flex', flexDirection: 'column', zIndex: 40, overflow: 'hidden' }}
           >
             {sidebarContent}
           </motion.nav>
