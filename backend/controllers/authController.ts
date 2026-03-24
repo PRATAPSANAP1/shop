@@ -11,7 +11,7 @@ const COOKIE_OPTS = {
   sameSite: 'none' as const,
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
-const FIVE_MIN = 6 * 60 * 1000; // 6 min buffer
+const FIVE_MIN = 6 * 60 * 1000; 
 
 export const register = async (req: Request, res: Response) => {
   try {

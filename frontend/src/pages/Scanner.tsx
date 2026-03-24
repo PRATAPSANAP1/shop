@@ -23,6 +23,13 @@ const Scanner = () => {
     setScanning(false);
   }, []);
 
+  const handleCancel = () => {
+    stopCamera();
+    setQrCode('');
+    setMessage('');
+    setScannedProduct(null);
+  };
+
   const scanFrame = useCallback(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -37,8 +44,15 @@ const Scanner = () => {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
     if (code) {
-      setQrCode(code.data);
-      setMessage('QR scanned: ' + code.data);
+      let data = code.data;
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.qrCode) data = parsed.qrCode;
+      } catch (e) {
+        // Not a JSON string, use as is
+      }
+      setQrCode(data);
+      setMessage('QR scanned successfully');
       stopCamera();
       return;
     }
@@ -47,6 +61,7 @@ const Scanner = () => {
 
   const startCamera = async () => {
     setMessage('');
+    setScannedProduct(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       streamRef.current = stream;
@@ -64,12 +79,17 @@ const Scanner = () => {
 
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
+    const currentQrCode = qrCode;
+    const currentQuantity = quantityTaken;
+    
+    // Empty the input field immediately after clicking as requested
+    setQrCode('');
+    setQuantityTaken(1);
+
     try {
-      const { data } = await scanProduct({ qrCode, quantityTaken });
+      const { data } = await scanProduct({ qrCode: currentQrCode, quantityTaken: currentQuantity });
       setScannedProduct(data);
-      setMessage(`${quantityTaken} units scanned. Remaining: ${data.quantity}`);
-      setQrCode('');
-      setQuantityTaken(1);
+      setMessage(`${currentQuantity} units scanned. Remaining: ${data.quantity}`);
     } catch (error) {
       setMessage(error.response?.data?.error || 'Product not found');
     }
@@ -87,8 +107,8 @@ const Scanner = () => {
             <button onClick={startCamera} className="btn btn-success" style={{ flex: 1 }} disabled={showCamera}>
               Open Camera
             </button>
-            <button onClick={stopCamera} className="btn btn-secondary" style={{ flex: 1 }} disabled={!showCamera}>
-              Close Camera
+            <button onClick={handleCancel} className="btn btn-secondary" style={{ flex: 1 }} disabled={!showCamera}>
+              Cancel / Close
             </button>
           </div>
 
@@ -132,10 +152,10 @@ const Scanner = () => {
             <div style={{ 
               marginTop: '20px', 
               padding: '15px', 
-              background: message.includes('scanned') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+              background: message.includes('scanned') || message.includes('successfully') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
               borderRadius: '8px', 
-              color: message.includes('scanned') ? '#10b981' : '#ef4444',
-              border: `1px solid ${message.includes('scanned') ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
+              color: message.includes('scanned') || message.includes('successfully') ? '#10b981' : '#ef4444',
+              border: `1px solid ${message.includes('scanned') || message.includes('successfully') ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`
             }}>
               {message}
             </div>

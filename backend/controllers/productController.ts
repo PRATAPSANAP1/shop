@@ -55,10 +55,11 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const scanProduct = async (req: Request, res: Response) => {
+export const scanProduct = async (req: AuthRequest, res: Response) => {
   try {
     const { qrCode, quantityTaken } = req.body;
-    const product = await Product.findOne({ qrCode });
+    const trimmedQrCode = qrCode?.toString().trim();
+    const product = await Product.findOne({ qrCode: trimmedQrCode });
     
     if (!product) return res.status(404).json({ error: 'Product not found' });
     
