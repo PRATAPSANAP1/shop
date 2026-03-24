@@ -175,7 +175,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         )}
 
         {isMobile && (
-          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: 'env(safe-area-inset-top)', left: '10px', right: '10px', height: '46px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 12px' }}>
+          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: 'env(safe-area-inset-top)', left: 0, right: 0, height: '46px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
               <Store size={16} color="#818cf8" style={{ flexShrink: 0 }} />
               <h2 style={{ fontSize: '14px', margin: 0, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Admin Panel</h2>
@@ -214,9 +214,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <motion.div
               initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               style={{
-                position: 'fixed', top: 0, left: 0, width: '75vw', maxWidth: '300px', height: '100vh',
+                position: 'fixed', top: 0, left: 0, width: 'min(80vw, 260px)', height: '100vh',
                 padding: '24px 16px', display: 'flex', flexDirection: 'column', zIndex: 210,
-                borderRadius: '0 24px 24px 0', boxSizing: 'border-box',
+                borderRadius: '0 20px 20px 0', boxSizing: 'border-box',
                 background: 'rgba(15,23,42,0.97)', backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255,255,255,0.08)', boxShadow: '4px 0 40px rgba(0,0,0,0.6)'
               }}
