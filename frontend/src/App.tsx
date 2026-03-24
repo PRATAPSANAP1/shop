@@ -175,7 +175,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         )}
 
         {isMobile && (
-          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: 'env(safe-area-inset-top)', left: 0, right: 0, height: '46px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
+          <div className="glass-panel mobile-header" style={{ position: 'fixed', top: 'calc(env(safe-area-inset-top) + 50px)', left: 0, right: 0, height: '46px', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
               <Store size={16} color="#818cf8" style={{ flexShrink: 0 }} />
               <h2 style={{ fontSize: '14px', margin: 0, color: 'white', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Admin Panel</h2>
@@ -188,7 +188,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
         <div style={{
           flex: 1, minWidth: 0, overflowY: 'auto', overflowX: 'hidden', scrollBehavior: 'smooth',
-          padding: isMobile ? 'calc(env(safe-area-inset-top) + 56px) 8px 8px 8px' : '15px 15px 15px 0',
+          padding: isMobile ? 'calc(env(safe-area-inset-top) + 106px) 8px 8px 8px' : '15px 15px 15px 0',
           display: 'flex', flexDirection: 'column'
         }}>
           <AnimatePresence mode="wait">
