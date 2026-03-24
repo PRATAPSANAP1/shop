@@ -215,7 +215,7 @@ const ShopView3D = () => {
   };
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', background: '#0f172a' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: isMobile ? 'column' : 'row', background: '#0f172a', overflow: 'hidden' }}>
       <div style={{ flex: 1, position: 'relative', minHeight: isMobile ? '55vh' : 'unset' }}>
         <Canvas shadows camera={{ position: [15, 10, 15], fov: 50 }} style={{ background: '#0f172a' }}>
           <Environment preset="city" />
@@ -277,7 +277,7 @@ const ShopView3D = () => {
         )}
 
         {/* Search bar */}
-        <div style={{ position: 'absolute', top: isMobile ? '58px' : '12px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? 'calc(100% - 24px)' : '360px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', top: isMobile ? '10px' : '12px', left: '50%', transform: 'translateX(-50%)', width: isMobile ? 'calc(100% - 24px)' : '360px', zIndex: 10 }}>
           <div style={{ position: 'relative' }}>
             <input
               value={searchQuery}
@@ -320,7 +320,7 @@ const ShopView3D = () => {
 
         {/* Found banner */}
         {searchActive && (
-          <div style={{ position: 'absolute', top: isMobile ? '116px' : '70px', left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: 'white', padding: '10px 20px', borderRadius: '30px', zIndex: 10, fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 15px rgba(16,185,129,0.4)', whiteSpace: 'nowrap' }}>
+          <div style={{ position: 'absolute', top: isMobile ? '68px' : '70px', left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: 'white', padding: '8px 16px', borderRadius: '30px', zIndex: 10, fontSize: '13px', fontWeight: '600', boxShadow: '0 4px 15px rgba(16,185,129,0.4)', whiteSpace: 'nowrap' }}>
             📍 Found in {racks.find((r: any) => r._id === highlightedRackId)?.rackName}
           </div>
         )}
