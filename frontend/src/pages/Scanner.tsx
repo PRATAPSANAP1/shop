@@ -92,20 +92,18 @@ const Scanner = () => {
             </button>
           </div>
 
-          {showCamera && (
-            <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-              <div style={{ position: 'relative', display: 'inline-block', width: '100%', maxWidth: '300px' }}>
-                <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
-                {scanning && (
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-                    <div style={{ width: '60%', height: '60%', border: '3px solid #10b981', borderRadius: '8px', boxShadow: '0 0 0 9999px rgba(0,0,0,0.35)' }} />
-                    <div style={{ marginTop: '10px', color: '#10b981', fontSize: '13px', fontWeight: '600', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '20px' }}>Scanning...</div>
-                  </div>
-                )}
-              </div>
-              <canvas ref={canvasRef} style={{ display: 'none' }} />
+          <div style={{ marginBottom: '20px', textAlign: 'center', display: showCamera ? 'block' : 'none' }}>
+            <div style={{ position: 'relative', display: 'inline-block', width: '100%', maxWidth: '300px' }}>
+              <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
+              {scanning && (
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+                  <div style={{ width: '60%', height: '60%', border: '3px solid #10b981', borderRadius: '8px', boxShadow: '0 0 0 9999px rgba(0,0,0,0.35)' }} />
+                  <div style={{ marginTop: '10px', color: '#10b981', fontSize: '13px', fontWeight: '600', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '20px' }}>Scanning...</div>
+                </div>
+              )}
             </div>
-          )}
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+          </div>
           
           <form onSubmit={handleScan}>
             <input
