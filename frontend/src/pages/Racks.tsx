@@ -207,7 +207,6 @@ const Racks = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
                   <div style={{ minWidth: 0, overflow: 'hidden' }}>
-                    <h3 style={{ fontSize: '17px', margin: '0 0 4px 0', color: 'white', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rack.rackName}</h3>
                     <span style={{ fontSize: '12px', padding: '2px 10px', borderRadius: '20px', background: `${statusColor(rack.status)}20`, color: statusColor(rack.status), fontWeight: '600' }}>
                       {rack.status || 'normal'}
                     </span>
@@ -216,6 +215,7 @@ const Racks = () => {
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '8px', flex: 2, minWidth: isMobile ? '100%' : '320px' }}>
                   {[
+                    ['Name', rack.rackName],
                     ['W×H', `${rack.width || 2}m × ${rack.height || 3}m`],
                     ['Orient', rack.orientation === 'horizontal' ? 'Horizontal' : 'Vertical'],
                     ['Shelves', rack.shelves || 4],
