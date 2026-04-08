@@ -206,7 +206,6 @@ const Racks = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
-                  <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: rack.color || '#4CAF50', flexShrink: 0, boxShadow: `0 4px 12px ${rack.color || '#4CAF50'}60` }} />
                   <div style={{ minWidth: 0, overflow: 'hidden' }}>
                     <h3 style={{ fontSize: '17px', margin: '0 0 4px 0', color: 'white', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{rack.rackName}</h3>
                     <span style={{ fontSize: '12px', padding: '2px 10px', borderRadius: '20px', background: `${statusColor(rack.status)}20`, color: statusColor(rack.status), fontWeight: '600' }}>
