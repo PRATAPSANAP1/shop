@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features | SmartStore AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-header {
+            padding: 150px 5% 60px;
+            text-align: center;
+        }
+        .page-header h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 0 5% 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--border-glow);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.2);
+        }
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            margin-bottom: 20px;
+        }
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+    <div class="grid-bg"></div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                <i class="fa-solid fa-store"></i>
+                <span>SmartStore<span class="highlight">AI</span></span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="features.html" class="active">Features</a>
+            <a href="about.html">About</a>
+            <a href="index.html#dashboards" class="btn-primary">View Dashboards</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <h1>Project <span class="text-gradient">Features</span></h1>
+        <p class="hero-subtitle" style="margin: 0 auto;">Here is what we built for SmartStore to analyze CCTV footage.</p>
+    </header>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
+            <h3>YOLOv8 Detection</h3>
+            <p>We use the YOLOv8 model to detect customers walking around the store from the camera feed.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-route"></i></div>
+            <h3>Customer Tracking</h3>
+            <p>We keep track of the same person across frames so we can draw lines showing their path through the store.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-fire-flame-curved"></i></div>
+            <h3>Heatmaps</h3>
+            <p>We overlay a heatmap on the video so you can easily see which aisles get the most foot traffic.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-regular fa-clock"></i></div>
+            <h3>Dwell Time</h3>
+            <p>We measure how long people stand in specific zones to figure out where they are actually looking at products.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+            <h3>Movement Prediction</h3>
+            <p>We trained an XGBoost model on the traffic data to guess where a customer is likely to walk next.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon"><i class="fa-solid fa-lightbulb"></i></div>
+            <h3>Automated Assistant</h3>
+            <p>A Python script runs in the background to look at the traffic and dwell times, and then prints out simple suggestions on how to improve the store layout.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 SmartStore AI. Built for the Hackathon.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
